@@ -1,9 +1,12 @@
 import "./footer.css"
 
 const Footer = () => {
+    const footer_text = "Made with <3 by Quinn"
     return (
-        <div>
-            Hello World From Footer!
+        <div className="footer-container">
+            <p>
+                {footer_text}
+            </p>
         </div>
     )
 }

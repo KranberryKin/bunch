@@ -1,6 +1,20 @@
 .header-container{
     display: flex;
+    background-color: blanchedalmond;
     flex-direction: row;
     text-align: center;
+    align-items: center;
     height: 10vh;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+.options-container{
+    display: flex;
+}
+.header-option{
+    padding-right: 1rem;
+    &:hover{
+        cursor: pointer;
+        color: blue;
+    }
 }
