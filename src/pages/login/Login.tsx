@@ -1,0 +1,181 @@
+import React, { useState } from "react";
+import './login.css'
+import { IUser } from "../../constants/interfaces/user";
+import Button from "../../components/button/button.tsx";
+import { useNavigate } from "react-router-dom";
+
+interface IUserForm {
+    userName:string;
+    password:string;
+    verify:string;
+}
+
+const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
+    const navigate = useNavigate();
+    const [userForm, setUserForm] = useState<IUserForm>({
+        userName:"",
+        password:"",
+        verify:""
+    })
+    const [creatingUser, setCreatingUser] = useState<boolean>(true);
+
+
+    const switchForms = () => {
+        setInitialState();
+        if(creatingUser){
+            setCreatingUser(false);
+        }else{
+            setCreatingUser(true);
+        }
+    }
+
+    const setInitialState = () => {
+        setUserForm({
+            userName:"",
+            password:"",
+            verify:""
+        })
+    }
+
+    const updateUserName = (s:string) => {
+        setUserForm({
+            userName: s,
+            password: userForm.password,
+            verify: userForm.verify
+        });
+    }
+
+    
+    const updatePassword = (s:string) => {
+        setUserForm({
+            userName: userForm.userName,
+            password: s,
+            verify: userForm.verify
+        });
+    }
+
+    
+    const updateVerify = (s:string) => {
+        setUserForm({
+            userName: userForm.userName,
+            password: userForm.password,
+            verify: s
+        });
+    }
+
+    const validateForm = (formData:IUserForm) => {
+        let isValid = true;
+        for(let i = 0; i < formData.password.length; i++){
+            let passChar = formData.password[i];
+            let variChar = formData.verify[i];
+            if(passChar !== variChar){
+                isValid = false;
+            }
+        }
+        return isValid;
+    }
+
+
+    const onSubmit = () => {
+        debugger
+        if(!validateForm(userForm)){
+            console.log("Failed to Create User")
+        }else{
+            const newUser: IUser = {
+                user_name: userForm.userName,
+                password:userForm.password,
+            };
+            let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
+            let BunchUsers:IUser[] = [];
+
+            if(bunchUsersStringData === null){
+                BunchUsers = [newUser];
+            }else{
+                BunchUsers = JSON.parse(bunchUsersStringData);
+                BunchUsers.push(newUser)
+            }
+            window.localStorage.setItem("bunch-users", JSON.stringify(BunchUsers))
+            setCurrentUser(newUser);
+            navigate("/my_profile");
+        }
+    }
+
+    const login = () => {
+        debugger
+        let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
+        let BunchUsers:IUser[] = [];
+
+        if(bunchUsersStringData === null){
+            BunchUsers = [];
+        }else{
+            BunchUsers = JSON.parse(bunchUsersStringData);
+        }
+
+        const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
+        let foundUser:IUser = {} as IUser;
+        if(foundUserIndex > -1){
+            foundUser = BunchUsers[foundUserIndex];
+        }else{
+            console.log("Couldn't find User")
+            return;
+        }
+
+        let isValid = true;
+        for(let i =0; i < foundUser.password.length; i++){
+            const passChar = foundUser.password[i];
+            const formChar = userForm.password[i];
+            if(passChar !== formChar){
+                isValid = false;
+            }
+        }
+
+        if(isValid){
+            setCurrentUser(foundUser)
+            navigate("/my_profile");
+        }else{
+            console.log("Passwords Don't Match")
+        }
+
+    }
+
+
+    const title = 'Please create an Account or Login'
+    return (<div className="login-container">
+        <div className="login-title">
+            {title}
+        </div>
+        <div className="form-filter-container">
+            {creatingUser ? <Button title="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button title="New User?" backgroundClass="bg-green" clicked={switchForms} />}
+        </div>
+        <div className={creatingUser ? "form-container" : "hidden form-container"}>
+            <label htmlFor="userName">UserName</label>
+            <input name="userName" value={userForm.userName} type="text" onChange={(e) => updateUserName(e.target.value)} />
+
+            <label htmlFor="password">Password</label>
+            <input name="password" value={userForm.password} type="password" onChange={(e) => updatePassword(e.target.value)} />
+
+            <label htmlFor="verify">Verify</label>
+            <input name="verify" value={userForm.verify} type="password" onChange={(e) => updateVerify(e.target.value)} />
+
+            <div className="login-button-container">
+                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button title="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
+            </div>
+        </div>
+
+        <div className={creatingUser ? "hidden form-container" : "form-container"}>
+            <label htmlFor="userName">UserName</label>
+            <input name="userName" value={userForm.userName} type="text" onChange={(e) => updateUserName(e.target.value)} />
+
+            <label htmlFor="password">Password</label>
+            <input name="password" value={userForm.password} type="password" onChange={(e) => updatePassword(e.target.value)} />
+
+
+            <div className="login-button-container">
+                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button title="Login" clicked={login} backgroundClass="bg-green"/>
+            </div>
+        </div>
+    </div>)
+}
+export default Login;
