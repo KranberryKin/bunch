@@ -4,14 +4,9 @@ import "./header.css";
 import React from "react";
 import { IUser } from "../../constants/interfaces/user";
 
-const Header = ({currentUser}:{currentUser: IUser | undefined}) => {
+const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
     const title = "Bunch";
     const navigate = useNavigate();
-    const page_options: IPageContent[] = [
-        {page_name:"Home", page_url: "/bunch"},
-        {page_name:"Profile", page_url: "/my_profile"},
-        {page_name:"Login", page_url:"/login"}
-    ]
     const setPage = (url: string) => {
         navigate(url);
     }

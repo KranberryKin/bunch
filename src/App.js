@@ -7,11 +7,16 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
+  const page_options = [
+    {page_name:"Home", page_url: "/bunch"},
+    {page_name:"Profile", page_url: "/my_profile"},
+    {page_name:"Login", page_url:"/login"}
+]
   return (
     <div className="App">
       <Router>
-        <Header currentUser={currentUser}/>
-        <Body currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+        <Header currentUser={currentUser} page_options={page_options}/>
+        <Body currentUser={currentUser} setCurrentUser={setCurrentUser} page_options={page_options}/>
         <Footer />
       </Router>
 

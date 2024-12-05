@@ -3,6 +3,7 @@ import './login.css'
 import { IUser } from "../../constants/interfaces/user";
 import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
+import { IPageContent } from "../../constants/interfaces/page.ts";
 
 interface IUserForm {
     userName:string;
@@ -10,8 +11,9 @@ interface IUserForm {
     verify:string;
 }
 
-const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
+const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
     const navigate = useNavigate();
+    const UserDB = "bunch-users";
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
@@ -85,7 +87,7 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
                 user_name: userForm.userName,
                 password:userForm.password,
             };
-            let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
+            let bunchUsersStringData = window.localStorage.getItem(UserDB) ?? null;
             let BunchUsers:IUser[] = [];
 
             if(bunchUsersStringData === null){
@@ -94,15 +96,20 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
                 BunchUsers = JSON.parse(bunchUsersStringData);
                 BunchUsers.push(newUser)
             }
-            window.localStorage.setItem("bunch-users", JSON.stringify(BunchUsers))
+            window.localStorage.setItem(UserDB, JSON.stringify(BunchUsers))
             setCurrentUser(newUser);
-            navigate("/my_profile");
+            const profileUrl = page_options.find(page => page.page_name = "Profile")?.page_url;
+            if(profileUrl !== undefined){
+                navigate(profileUrl);
+            }else{
+                navigate('/my_profile')
+            }
         }
     }
 
     const login = () => {
         debugger
-        let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
+        let bunchUsersStringData = window.localStorage.getItem(UserDB) ?? null;
         let BunchUsers:IUser[] = [];
 
         if(bunchUsersStringData === null){
