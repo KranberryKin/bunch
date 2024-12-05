@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './login.css'
-import { IUser } from "../../constants/interfaces/user";
+import IUser from "../../constants/interfaces/user";
 import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
+import LocalStorageManager from "../../services/LocalStorageManager.ts";
+import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 
 interface IUserForm {
@@ -11,7 +13,7 @@ interface IUserForm {
     verify:string;
 }
 
-const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
+const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
     const navigate = useNavigate();
     const UserDB = "bunch-users";
     const [userForm, setUserForm] = useState<IUserForm>({
@@ -20,15 +22,19 @@ const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void
         verify:""
     })
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
+    const userDBString = "bunch-users";
+    const UserDataService = new LocalStorageManager<IUser>(userDBString);
+
+    useEffect(() => {
+        if(currentUser !== undefined){
+            navigate("/my_profile");
+        }
+    },[currentUser])
 
 
     const switchForms = () => {
         setInitialState();
-        if(creatingUser){
-            setCreatingUser(false);
-        }else{
-            setCreatingUser(true);
-        }
+        setCreatingUser(!creatingUser);
     }
 
     const setInitialState = () => {
@@ -83,20 +89,14 @@ const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void
         if(!validateForm(userForm)){
             console.log("Failed to Create User")
         }else{
-            const newUser: IUser = {
+            let newUser: IUser = {
+                id: UserDataService.generateId(),
                 user_name: userForm.userName,
                 password:userForm.password,
             };
-            let bunchUsersStringData = window.localStorage.getItem(UserDB) ?? null;
-            let BunchUsers:IUser[] = [];
-
-            if(bunchUsersStringData === null){
-                BunchUsers = [newUser];
-            }else{
-                BunchUsers = JSON.parse(bunchUsersStringData);
-                BunchUsers.push(newUser)
-            }
-            window.localStorage.setItem(UserDB, JSON.stringify(BunchUsers))
+            UserDataService.add(newUser);
+            newUser.password = "";
+            userSessionManager.saveSessionData(newUser, 10)
             setCurrentUser(newUser);
             const profileUrl = page_options.find(page => page.page_name = "Profile")?.page_url;
             if(profileUrl !== undefined){
@@ -109,21 +109,14 @@ const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void
 
     const login = () => {
         debugger
-        let bunchUsersStringData = window.localStorage.getItem(UserDB) ?? null;
-        let BunchUsers:IUser[] = [];
-
-        if(bunchUsersStringData === null){
-            BunchUsers = [];
-        }else{
-            BunchUsers = JSON.parse(bunchUsersStringData);
-        }
+        let BunchUsers:IUser[] = UserDataService.values;
 
         const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
         let foundUser:IUser = {} as IUser;
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
-            console.log("Couldn't find User")
+            console.error("Couldn't find User")
             return;
         }
 
@@ -137,10 +130,12 @@ const Login = ({setCurrentUser, page_options}:{setCurrentUser: (s:IUser) => void
         }
 
         if(isValid){
+            foundUser.password = "";
+            userSessionManager.saveSessionData(foundUser, 10)
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{
-            console.log("Passwords Don't Match")
+            console.error("Passwords Don't Match")
         }
 
     }

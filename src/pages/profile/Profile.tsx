@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import './profile.css'
-import { IUser } from '../../constants/interfaces/user';
+import IUser from '../../constants/interfaces/user';
 import { useNavigate } from 'react-router-dom';
 const Profile = ({currentUser}:{currentUser: IUser | undefined}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(currentUser == null){
+        if(currentUser === undefined){
             navigate("/login");
         }
-    },[currentUser])
+    },[currentUser]);
     
     return (
         <div className='profile-container'>
