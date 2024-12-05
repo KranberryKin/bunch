@@ -8,7 +8,7 @@ const HomePage = () => {
     const versionDescription = "Here you can find the recent updates to the App of changes to UI/UX 'User Interaction & User Experience'."
     const updates: string[] = [
         "12/3 Created two forms. creating user & logging in a User. Also, added navigation to profile page after login.",
-        "12/5 Updated codebase. Improved functionality of app for improved productivity. (Created LocalStorageManager Service)"
+        "12/5 Updated codebase. Improved functionality of app for improved productivity. (Created LocalStorageManager Service). Also keeping User state in Browser, so App will no longer require login on refresh. (Token Expires in 10 min)"
     ]
 
     return (
@@ -23,7 +23,7 @@ const HomePage = () => {
             <p>
                 {versionDescription}
             </p>
-            <ul>
+            <ul className='version-updates'>
                 {updates.map((str, index) => (
                     <li key={"HomePage-" + index}>
                         {str}

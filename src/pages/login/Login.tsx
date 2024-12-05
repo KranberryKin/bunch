@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './login.css'
-import { IUser } from "../../constants/interfaces/user";
+import IUser from "../../constants/interfaces/user";
 import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
+import SessionDataManager from "../../services/SessionDataManager.ts";
 
 interface IUserForm {
     userName:string;
@@ -11,7 +12,7 @@ interface IUserForm {
     verify:string;
 }
 
-const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
+const Login = ({currentUser, setCurrentUser, userSessionManager} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>}) => {
     const navigate = useNavigate();
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
@@ -21,6 +22,12 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
     const userDBString = "bunch-users";
     const UserDataService = new LocalStorageManager<IUser>(userDBString);
+
+    useEffect(() => {
+        if(currentUser !== undefined){
+            navigate("/my_profile");
+        }
+    },[currentUser])
 
 
     const switchForms = () => {
@@ -80,12 +87,14 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
         if(!validateForm(userForm)){
             console.log("Failed to Create User")
         }else{
-            const newUser: IUser = {
+            let newUser: IUser = {
                 id: UserDataService.generateId(),
                 user_name: userForm.userName,
                 password:userForm.password,
             };
             UserDataService.add(newUser);
+            newUser.password = "";
+            userSessionManager.saveSessionData(newUser, 10)
             setCurrentUser(newUser);
             navigate("/my_profile");
         }
@@ -114,6 +123,8 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
         }
 
         if(isValid){
+            foundUser.password = "";
+            userSessionManager.saveSessionData(foundUser, 10)
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{

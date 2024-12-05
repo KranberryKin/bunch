@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { IPageContent } from "../../constants/interfaces/page";
 import "./header.css";
 import React from "react";
-import { IUser } from "../../constants/interfaces/user";
+import IUser from "../../constants/interfaces/user";
 
 const Header = ({currentUser}:{currentUser: IUser | undefined}) => {
     const title = "Bunch";

@@ -2,11 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
 import HomePage from "../../pages/homepage/HomePage.tsx";
 import Profile from "../../pages/profile/Profile.tsx";
-import { IUser } from "../../constants/interfaces/user";
+import IUser from "../../constants/interfaces/user";
 import Login from "../../pages/login/Login.tsx";
+import SessionDataManager from "../../services/SessionDataManager.ts";
 
 
 const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void}) => {
+    const userSessionLocal = "userSession"
+    const userSessionManager = new SessionDataManager<IUser>(userSessionLocal);
+  
+    useEffect(() => {
+      if(currentUser === undefined){
+        const sessionData = userSessionManager.checkSessionData<IUser>();
+        if(sessionData != null){
+          setCurrentUser(sessionData)
+        }
+      }
+    },[currentUser]);
     return (
         <div className="body-content">
                 <Routes>
@@ -18,7 +30,7 @@ const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,set
                         <Profile currentUser={currentUser}/>
                         }/>
                     <Route path='/login' element={
-                        <Login setCurrentUser={setCurrentUser}/>
+                        <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
                         }/>
                 </Routes>
         </div>
