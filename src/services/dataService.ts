@@ -60,6 +60,14 @@ class LocalStorageManager<T extends {id:number}> {
                     const key = keys[i];
                     objToUpdate[key] = obj[key];
                 }
+                const removeObjIndex =  this.values.findIndex(vObj => vObj.id === obj.id);
+                if(removeObjIndex > -1){
+                    this.values.splice(removeObjIndex, 1);
+                    this.values.push(objToUpdate);
+                    this.saveState();
+                }else {
+                throw new Error(`Can't find Obj w/ id "${obj.id}" `)
+                }
             } else {
                 throw new Error(`Can't find Obj w/ id "${obj.id}" `)
             }
