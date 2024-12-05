@@ -81,7 +81,7 @@ class LocalStorageManager<T extends {id:number}> {
         try {
             const delObjIndex = this.values.findIndex(valObj => valObj.id === obj.id);
             if(delObjIndex > -1){
-                this.values.filter(valObj => valObj.id !== obj.id);
+                this.values = this.values.filter(valObj => valObj.id !== obj.id);
                 this.saveState()
             }else {
                 throw new Error(`Can't find Obj w/ Id "${obj.id}"`)
