@@ -91,4 +91,23 @@ class LocalStorageManager<T extends {id:number}> {
             return;
         }
     };
+
+    generateId(min: number = 1, max: number = 1000000):number {
+        try {
+            let newId = -1;
+            let checkingForDupeId = true;
+            while (checkingForDupeId){
+                newId = Math.floor(Math.random() * (max - min + 1)) + min;
+                const dupeIdIndex = this.values.findIndex(vObj => vObj.id === newId);
+                if(dupeIdIndex === -1){
+                    checkingForDupeId = false;
+                }
+            }
+            return newId;
+        }catch (error){
+            console.error(`Error deleting item from localStorage with key "${this._key}":`, error);
+            return -1; 
+        } 
+    }
 }
+export default LocalStorageManager;

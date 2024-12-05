@@ -3,6 +3,7 @@ import './login.css'
 import { IUser } from "../../constants/interfaces/user";
 import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
+import LocalStorageManager from "../../services/LocalStorageManager.ts";
 
 interface IUserForm {
     userName:string;
@@ -18,15 +19,13 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
         verify:""
     })
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
+    const userDBString = "bunch-users";
+    const UserDataService = new LocalStorageManager<IUser>(userDBString);
 
 
     const switchForms = () => {
         setInitialState();
-        if(creatingUser){
-            setCreatingUser(false);
-        }else{
-            setCreatingUser(true);
-        }
+        setCreatingUser(!creatingUser);
     }
 
     const setInitialState = () => {
@@ -82,19 +81,11 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
             console.log("Failed to Create User")
         }else{
             const newUser: IUser = {
+                id: UserDataService.generateId(),
                 user_name: userForm.userName,
                 password:userForm.password,
             };
-            let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
-            let BunchUsers:IUser[] = [];
-
-            if(bunchUsersStringData === null){
-                BunchUsers = [newUser];
-            }else{
-                BunchUsers = JSON.parse(bunchUsersStringData);
-                BunchUsers.push(newUser)
-            }
-            window.localStorage.setItem("bunch-users", JSON.stringify(BunchUsers))
+            UserDataService.add(newUser);
             setCurrentUser(newUser);
             navigate("/my_profile");
         }
@@ -102,21 +93,14 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
 
     const login = () => {
         debugger
-        let bunchUsersStringData = window.localStorage.getItem("bunch-users") ?? null;
-        let BunchUsers:IUser[] = [];
-
-        if(bunchUsersStringData === null){
-            BunchUsers = [];
-        }else{
-            BunchUsers = JSON.parse(bunchUsersStringData);
-        }
+        let BunchUsers:IUser[] = UserDataService.values;
 
         const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
         let foundUser:IUser = {} as IUser;
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
-            console.log("Couldn't find User")
+            console.error("Couldn't find User")
             return;
         }
 
@@ -133,7 +117,7 @@ const Login = ({setCurrentUser}:{setCurrentUser: (s:IUser) => void}) => {
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{
-            console.log("Passwords Don't Match")
+            console.error("Passwords Don't Match")
         }
 
     }
