@@ -24,13 +24,13 @@ const Header = ({currentUser}:{currentUser: IUser | undefined}) => {
                 </p>
             </div>
             <div className="options-container">
-                {page_options.map(obj => {
+                {page_options.map((obj, index) => {
                     if(currentUser === undefined && obj.page_name == page_options[1].page_name){
                         return;
                     }else if(currentUser !== undefined && obj.page_name == page_options[2].page_name){
                         return;
                     }
-                    return (<p className="header-option" onClick={() => setPage(obj.page_url)}>
+                    return (<p key={"Header-" + index} className="header-option" onClick={() => setPage(obj.page_url)}>
                         {obj.page_name}
                     </p>
                     )
