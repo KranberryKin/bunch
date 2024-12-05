@@ -4,9 +4,10 @@ import HomePage from "../../pages/homepage/HomePage.tsx";
 import Profile from "../../pages/profile/Profile.tsx";
 import { IUser } from "../../constants/interfaces/user";
 import Login from "../../pages/login/Login.tsx";
+import { IPageContent } from "../../constants/interfaces/page.ts";
 
 
-const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void}) => {
+const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
     return (
         <div className="body-content">
                 <Routes>
@@ -18,7 +19,7 @@ const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,set
                         <Profile currentUser={currentUser}/>
                         }/>
                     <Route path='/login' element={
-                        <Login setCurrentUser={setCurrentUser}/>
+                        <Login setCurrentUser={setCurrentUser} page_options={page_options}/>
                         }/>
                 </Routes>
         </div>
