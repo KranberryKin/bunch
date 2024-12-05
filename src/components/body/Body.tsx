@@ -5,9 +5,10 @@ import Profile from "../../pages/profile/Profile.tsx";
 import IUser from "../../constants/interfaces/user";
 import Login from "../../pages/login/Login.tsx";
 import SessionDataManager from "../../services/SessionDataManager.ts";
+import { IPageContent } from "../../constants/interfaces/page.ts";
 
 
-const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void}) => {
+const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser | undefined, setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
     const userSessionLocal = "userSession"
     const userSessionManager = new SessionDataManager<IUser>(userSessionLocal);
   
@@ -30,7 +31,7 @@ const Body = ({currentUser, setCurrentUser} :{currentUser: IUser | undefined,set
                         <Profile currentUser={currentUser}/>
                         }/>
                     <Route path='/login' element={
-                        <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+                        <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                         }/>
                 </Routes>
         </div>

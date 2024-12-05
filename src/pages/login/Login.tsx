@@ -5,6 +5,7 @@ import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
+import { IPageContent } from "../../constants/interfaces/page.ts";
 
 interface IUserForm {
     userName:string;
@@ -12,8 +13,9 @@ interface IUserForm {
     verify:string;
 }
 
-const Login = ({currentUser, setCurrentUser, userSessionManager} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>}) => {
+const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
     const navigate = useNavigate();
+    const UserDB = "bunch-users";
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
@@ -96,7 +98,12 @@ const Login = ({currentUser, setCurrentUser, userSessionManager} : {currentUser:
             newUser.password = "";
             userSessionManager.saveSessionData(newUser, 10)
             setCurrentUser(newUser);
-            navigate("/my_profile");
+            const profileUrl = page_options.find(page => page.page_name = "Profile")?.page_url;
+            if(profileUrl !== undefined){
+                navigate(profileUrl);
+            }else{
+                navigate('/my_profile')
+            }
         }
     }
 
