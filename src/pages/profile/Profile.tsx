@@ -3,7 +3,8 @@ import './profile.css'
 import IUser from '../../constants/interfaces/user';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button/button.tsx';
-const Profile = ({currentUser}:{currentUser: IUser | undefined}) => {
+import LocalStorageManager from '../../services/LocalStorageManager.ts';
+const Profile = ({currentUser, setCurrentUser}:{currentUser: IUser | undefined, setCurrentUser: (IUser) => void}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,8 +17,13 @@ const Profile = ({currentUser}:{currentUser: IUser | undefined}) => {
         console.log("I'm Clicked, What Do i Do?!")
     }
 
-    const doThat = () => {
-        console.log("I'm Clicked, What Do i Do?!")
+    const deleteUser = () => {
+        if(window.confirm("Are you Sure you want to Delet User?") && currentUser !== undefined){
+            const userDBString = "bunch-users";
+            const userDataService = new LocalStorageManager<IUser>(userDBString)
+            userDataService.deleteData(currentUser)
+            setCurrentUser(undefined);
+        }
     }
 
     
@@ -26,7 +32,7 @@ const Profile = ({currentUser}:{currentUser: IUser | undefined}) => {
             <div className='profile-top-section'>
                 <div className='profile-pic-section-container'>
                     <div>
-                        <img className="profile-pic" src="http://placehold.it/50x50" alt="profile-pic" />
+                        <img className="profile-pic" src="https://placehold.it/100x100" alt="profile-pic" />
                         <p>
                             {currentUser?.user_name}
                         </p>
@@ -35,8 +41,10 @@ const Profile = ({currentUser}:{currentUser: IUser | undefined}) => {
                         <Button title='Edit Profile?' buttonLabel='✏️' clicked={dothis}  backgroundClass='bg-green'/>
                     </div>
                 </div>
-                <div>
-                    <Button title='Delete Profile?' buttonLabel='🗑️' clicked={doThat} backgroundClass='bg-red'  />
+                <div className='profile-del-button-container'>
+                    <div>
+                      <Button title='Delete Profile?' buttonLabel='🗑️' clicked={deleteUser} backgroundClass='bg-red'  />
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
+import { toast } from "react-toastify";
 
 interface IUserForm {
     userName:string;
@@ -85,8 +86,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
     const onSubmit = () => {
-        debugger
         if(!validateForm(userForm)){
+            toast.error("Form Data is Invalid. Ensure Password, and Password Verification match!")
             console.log("Failed to Create User")
         }else{
             let newUser: IUser = {
@@ -108,7 +109,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     }
 
     const login = () => {
-        debugger
         let BunchUsers:IUser[] = UserDataService.values;
 
         const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
@@ -116,6 +116,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
+            toast.error("User doesn't exist")
             console.error("Couldn't find User")
             return;
         }
@@ -135,6 +136,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{
+            toast.error("Password is incorrect")
             console.error("Passwords Don't Match")
         }
 
