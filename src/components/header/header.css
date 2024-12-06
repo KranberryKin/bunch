@@ -1,6 +1,6 @@
 .header-container{
     display: flex;
-    background-color: blanchedalmond;
+    background-color: var(--bg-color);
     flex-direction: row;
     text-align: center;
     align-items: center;

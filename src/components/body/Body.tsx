@@ -9,7 +9,7 @@ import { IPageContent } from "../../constants/interfaces/page.ts";
 
 
 const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser | undefined, setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
-    const userSessionLocal = "userSession"
+    const userSessionLocal = "userSession";
     const userSessionManager = new SessionDataManager<IUser>(userSessionLocal);
   
     useEffect(() => {
