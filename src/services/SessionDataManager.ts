@@ -44,6 +44,13 @@ class SessionDataManager<T> {
           return null;
         }
       }
+
+      clearSession() {
+        const sessionItem = window.localStorage.getItem(this._key);
+        if(sessionItem !== null){
+          window.localStorage.removeItem(this._key);
+        }
+      }
 } 
 
 export default SessionDataManager;
