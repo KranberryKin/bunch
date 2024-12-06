@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
+import { toast } from "react-toastify";
 
 interface IUserForm {
     userName:string;
@@ -85,8 +86,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
     const onSubmit = () => {
-        debugger
         if(!validateForm(userForm)){
+            toast.error("Form Data is Invalid. Ensure Password, and Password Verification match!")
             console.log("Failed to Create User")
         }else{
             let newUser: IUser = {
@@ -108,7 +109,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     }
 
     const login = () => {
-        debugger
         let BunchUsers:IUser[] = UserDataService.values;
 
         const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
@@ -116,6 +116,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
+            toast.error("User doesn't exist")
             console.error("Couldn't find User")
             return;
         }
@@ -135,6 +136,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{
+            toast.error("Password is incorrect")
             console.error("Passwords Don't Match")
         }
 
@@ -142,12 +144,12 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
     const title = 'Please create an Account or Login'
-    return (<div className="login-container">
+    return (<div className="login-container body-content">
         <div className="login-title">
             {title}
         </div>
         <div className="form-filter-container">
-            {creatingUser ? <Button title="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button title="New User?" backgroundClass="bg-green" clicked={switchForms} />}
+            {creatingUser ? <Button buttonLabel="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button buttonLabel="New User?" backgroundClass="bg-green" clicked={switchForms} />}
         </div>
         <div className={creatingUser ? "form-container" : "hidden form-container"}>
             <label htmlFor="userName">UserName</label>
@@ -160,8 +162,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             <input name="verify" value={userForm.verify} type="password" onChange={(e) => updateVerify(e.target.value)} />
 
             <div className="login-button-container">
-                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button title="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
+                <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button buttonLabel="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
             </div>
         </div>
 
@@ -174,8 +176,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
             <div className="login-button-container">
-                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button title="Login" clicked={login} backgroundClass="bg-green"/>
+                <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button buttonLabel="Login" clicked={login} backgroundClass="bg-green"/>
             </div>
         </div>
     </div>)
