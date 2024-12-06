@@ -6,12 +6,11 @@ import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
-import { toast } from "react-toastify";
 
 interface IUserForm {
     userName:string;
     password:string;
-    verify:string;
+    verify_password:string;
 }
 
 const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
@@ -20,7 +19,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
-        verify:""
+        verify_password:""
     })
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
     const userDBString = "bunch-users";
@@ -42,7 +41,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         setUserForm({
             userName:"",
             password:"",
-            verify:""
+            verify_password:""
         })
     }
 
@@ -50,7 +49,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         setUserForm({
             userName: s,
             password: userForm.password,
-            verify: userForm.verify
+            verify_password: userForm.verify_password
         });
     }
 
@@ -59,7 +58,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         setUserForm({
             userName: userForm.userName,
             password: s,
-            verify: userForm.verify
+            verify_password: userForm.verify_password
         });
     }
 
@@ -68,7 +67,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         setUserForm({
             userName: userForm.userName,
             password: userForm.password,
-            verify: s
+            verify_password: s
         });
     }
 
@@ -76,7 +75,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         let isValid = true;
         for(let i = 0; i < formData.password.length; i++){
             let passChar = formData.password[i];
-            let variChar = formData.verify[i];
+            let variChar = formData.verify_password[i];
             if(passChar !== variChar){
                 isValid = false;
             }
@@ -87,7 +86,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
     const onSubmit = () => {
         if(!validateForm(userForm)){
-            toast.error("Form Data is Invalid. Ensure Password, and Password Verification match!")
             console.log("Failed to Create User")
         }else{
             let newUser: IUser = {
@@ -116,7 +114,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
-            toast.error("User doesn't exist")
             console.error("Couldn't find User")
             return;
         }
@@ -136,7 +133,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             setCurrentUser(foundUser)
             navigate("/my_profile");
         }else{
-            toast.error("Password is incorrect")
             console.error("Passwords Don't Match")
         }
 
@@ -158,8 +154,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             <label htmlFor="password">Password</label>
             <input name="password" value={userForm.password} type="password" onChange={(e) => updatePassword(e.target.value)} />
 
-            <label htmlFor="verify">Verify</label>
-            <input name="verify" value={userForm.verify} type="password" onChange={(e) => updateVerify(e.target.value)} />
+            <label htmlFor="verify">Re-Enter Password</label>
+            <input name="verify" value={userForm.verify_password} type="password" onChange={(e) => updateVerify(e.target.value)} />
 
             <div className="login-button-container">
                 <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
