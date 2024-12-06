@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { IPageContent } from "../../constants/interfaces/page";
 import "./header.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IUser from "../../constants/interfaces/user";
 
 const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
@@ -10,11 +10,18 @@ const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, pag
     const setPage = (url: string) => {
         navigate(url);
     }
-    const [theme, setTheme] = useState("light"); 
+    const [theme, setTheme] = useState("light");
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme)
+    },[theme])
 
     const changeThemes = () => {
-        theme === "light" ? setTheme('dark') : setTheme('light')
-        document.documentElement.setAttribute('data-theme', theme)
+        if(theme === "light"){
+            setTheme('dark')
+        }else{
+            setTheme('light')
+        } 
     }
 
     return (
