@@ -4,6 +4,7 @@ import IUser from '../../constants/interfaces/user';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button/button.tsx';
 import LocalStorageManager from '../../services/LocalStorageManager.ts';
+import { toast } from 'react-toastify';
 const Profile = ({currentUser, setCurrentUser}:{currentUser: IUser | undefined, setCurrentUser: (IUser) => void}) => {
     const navigate = useNavigate();
 
@@ -14,6 +15,7 @@ const Profile = ({currentUser, setCurrentUser}:{currentUser: IUser | undefined, 
     },[currentUser]);
     
     const dothis = () => {
+        toast.info("Coming Soon...")
         console.log("I'm Clicked, What Do i Do?!")
     }
 
