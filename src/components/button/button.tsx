@@ -3,15 +3,16 @@ import React from "react";
 import './button.css'
 
 interface IButton {
-    title:string,
+    buttonLabel:string,
     clicked: () => any;
     backgroundClass?:string;
+    title?:string
 }
 
-const Button = ({title, clicked, backgroundClass}:IButton) => {
+const Button = ({buttonLabel, clicked, backgroundClass, title}:IButton) => {
     return (
-        <div className={backgroundClass ? backgroundClass + " button-container" : "" + " button-container"} onClick={() => clicked()}>
-            {title}
+        <div title={title} className={backgroundClass ? backgroundClass + " button-container" : "" + " button-container"} onClick={() => clicked()}>
+            {buttonLabel}
         </div>
     )
 }

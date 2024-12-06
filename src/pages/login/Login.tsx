@@ -147,7 +147,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             {title}
         </div>
         <div className="form-filter-container">
-            {creatingUser ? <Button title="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button title="New User?" backgroundClass="bg-green" clicked={switchForms} />}
+            {creatingUser ? <Button buttonLabel="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button buttonLabel="New User?" backgroundClass="bg-green" clicked={switchForms} />}
         </div>
         <div className={creatingUser ? "form-container" : "hidden form-container"}>
             <label htmlFor="userName">UserName</label>
@@ -160,8 +160,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             <input name="verify" value={userForm.verify} type="password" onChange={(e) => updateVerify(e.target.value)} />
 
             <div className="login-button-container">
-                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button title="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
+                <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button buttonLabel="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
             </div>
         </div>
 
@@ -174,8 +174,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
             <div className="login-button-container">
-                <Button title="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button title="Login" clicked={login} backgroundClass="bg-green"/>
+                <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
+                <Button buttonLabel="Login" clicked={login} backgroundClass="bg-green"/>
             </div>
         </div>
     </div>)
