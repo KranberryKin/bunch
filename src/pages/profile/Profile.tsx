@@ -4,8 +4,8 @@ import IUser from '../../constants/interfaces/user';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button/button.tsx';
 import LocalStorageManager from '../../services/LocalStorageManager.ts';
-import { toast } from 'react-toastify';
-const Profile = ({currentUser, setCurrentUser}:{currentUser: IUser | undefined, setCurrentUser: (IUser) => void}) => {
+import SessionDataManager from '../../services/SessionDataManager.ts';
+const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser: IUser | undefined, setCurrentUser: (IUser) => void, userSessionManager: SessionDataManager<IUser>}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -15,15 +15,15 @@ const Profile = ({currentUser, setCurrentUser}:{currentUser: IUser | undefined, 
     },[currentUser]);
     
     const dothis = () => {
-        toast.info("Coming Soon...")
         console.log("I'm Clicked, What Do i Do?!")
     }
 
     const deleteUser = () => {
         if(window.confirm("Are you Sure you want to Delet User?") && currentUser !== undefined){
             const userDBString = "bunch-users";
-            const userDataService = new LocalStorageManager<IUser>(userDBString)
-            userDataService.deleteData(currentUser)
+            const userDataService = new LocalStorageManager<IUser>(userDBString);
+            userDataService.deleteData(currentUser);
+            userSessionManager.clearSession();
             setCurrentUser(undefined);
         }
     }
