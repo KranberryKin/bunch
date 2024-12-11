@@ -16,6 +16,7 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
     const navigate = useNavigate();
     const userDBString = DataBase_Strings.Users_DB;
     const userDataService = new LocalStorageManager<IUser>(userDBString);
+    
     const [editUserState, setEditUserState] = useState<IEditUserForm>({
         user_name:currentUser?.user_name ?? "",
         profile_picture: "",
@@ -79,6 +80,7 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
                 userToUpdate.password = "";
                 userSessionManager.saveSessionData(userToUpdate, 30);
                 setCurrentUser(userToUpdate);
+                setIsEditing(!isEditing)
             }
         }
     }
