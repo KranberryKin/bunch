@@ -10,7 +10,7 @@ const HomePage = () => {
         "12/3 Created two forms. creating user & logging in a User. Also, added navigation to profile page after login.",
         "12/5 Updated codebase. Improved functionality of app for improved productivity. (Created LocalStorageManager Service). Also keeping User state in Browser, so App will no longer require login on refresh. (Token Expires in 10 min)",
         "12/6 Changes Background Color and Header/Footer Color. Also added Toggle for Light and Dark Themes(Default Light, Click ⚙️ Icon in Header)",
-        "12/11 Updated the Profile Page to allow Users to Change Their Username, and upload an profile picture if desired. Slight changes to LocalStorageManager, Id generation is handled on Object creationn instead of needing to be assigned b4 update function."
+        "12/11 Updated the ProfilePage to allow users to vhange their username, and upload an profile picture if desired. Slight changes to LocalStorageManager, Id generation is handled on object creation/save instead of needing to be assigned b4 update function use."
     ]
 
     return (
