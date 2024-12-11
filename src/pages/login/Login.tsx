@@ -92,6 +92,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
                 id: -1,
                 user_name: userForm.userName,
                 password:userForm.password,
+                profile_picture: "",
             };
             UserDataService.add(newUser);
             newUser.password = "";

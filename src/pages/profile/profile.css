@@ -25,3 +25,11 @@
     display: flex;
     align-items: center;
 }
+.profile-edit-container{
+    display: flex;
+    flex-direction: column;
+    padding-right: 1rem;
+}
+.profile-edit-container-label{
+    margin-top: 1rem;
+}
