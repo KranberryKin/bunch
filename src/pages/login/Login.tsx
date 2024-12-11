@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
+import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 
 interface IUserForm {
     userName:string;
@@ -15,14 +16,13 @@ interface IUserForm {
 
 const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
     const navigate = useNavigate();
-    const UserDB = "bunch-users";
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
         verify_password:""
     })
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
-    const userDBString = "bunch-users";
+    const userDBString = DataBase_Strings.Users_DB;
     const UserDataService = new LocalStorageManager<IUser>(userDBString);
 
     useEffect(() => {
@@ -89,7 +89,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             console.log("Failed to Create User")
         }else{
             let newUser: IUser = {
-                id: UserDataService.generateId(),
+                id: -1,
                 user_name: userForm.userName,
                 password:userForm.password,
             };
