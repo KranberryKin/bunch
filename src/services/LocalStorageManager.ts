@@ -13,6 +13,7 @@ class LocalStorageManager<T extends {id:number}> {
     
     add(obj: T): void {
         try {
+            obj.id = this.generateId();
             this.values.push(obj);
             this.saveState();
             this.get()
