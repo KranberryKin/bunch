@@ -27,9 +27,12 @@ const HomePage = () => {
             </p>
             <ul className='version-updates'>
                 {updates.map((str, index) => (
+                    <>
                     <li key={"HomePage-" + index}>
                         {str}
                     </li>
+                    <br />
+                    </>
                 ))}
             </ul>
         </div>
