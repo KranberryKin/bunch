@@ -6,6 +6,7 @@ import IUser from "../../constants/interfaces/user";
 import Login from "../../pages/login/Login.tsx";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
+import BunchApp from "../../pages/bunch/bunchApp.tsx";
 
 
 const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser | undefined, setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
@@ -33,6 +34,9 @@ const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser |
                     <Route path='/login' element={
                         <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                         }/>
+                        <Route path="/bunchApp" element={
+                          <BunchApp />
+                        } />
                 </Routes>
         </div>
     );

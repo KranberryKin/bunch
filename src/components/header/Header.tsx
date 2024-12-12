@@ -33,7 +33,11 @@ const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, pag
             </div>
             <div className="options-container">
                 {page_options.map((obj, index) => {
-                    if(currentUser === undefined && obj.page_name == page_options[1].page_name){
+                    if(
+                            currentUser === undefined && 
+                            (obj.page_name == page_options[1].page_name ||
+                             obj.page_name == page_options[3].page_name)
+                        ){
                         return;
                     }else if(currentUser !== undefined && obj.page_name == page_options[2].page_name){
                         return;
