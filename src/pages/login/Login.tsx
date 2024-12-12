@@ -141,7 +141,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
 
     const title = 'Please create an Account or Login'
-    return (<div className="login-container body-content">
+    return (<div className="login-container">
         <div className="login-title">
             {title}
         </div>

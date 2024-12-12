@@ -14,7 +14,7 @@ const HomePage = () => {
     ]
 
     return (
-        <div className="body-content home-container">
+        <div className="home-container">
             <h1>{title}</h1>
             <p className='home-text-content'>
                 {content}
