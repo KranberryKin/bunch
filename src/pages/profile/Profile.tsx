@@ -19,9 +19,9 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
     
     const [editUserState, setEditUserState] = useState<IEditUserForm>({
         user_name:currentUser?.user_name ?? "",
-        profile_picture: "",
+        profile_picture: currentUser?.profile_picture ?? "",
     });
-    const isFormValid = editUserState.profile_picture !== "" || (editUserState.user_name !== "" && editUserState.user_name !== currentUser?.user_name)
+    const isFormValid = editUserState.profile_picture !== "" || editUserState.user_name !== ""
         
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
