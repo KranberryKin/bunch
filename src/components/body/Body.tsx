@@ -25,17 +25,16 @@ const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser |
         <div className="body-content">
                 <Routes>
                     <Route path="/bunch" element={
-                        <HomePage />
-                        }>
-                        </Route>
+                          <HomePage />
+                        }/>
                     <Route path='/my_profile' element={
-                        <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} userSessionManager={userSessionManager}/>
+                          <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} userSessionManager={userSessionManager}/>
                         }/>
                     <Route path='/login' element={
-                        <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
+                          <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                         }/>
-                        <Route path="/bunchApp" element={
-                          <BunchApp />
+                    <Route path="/bunchApp" element={
+                          <BunchApp childComponent={<div>{"Needs to be created"}</div>}/>
                         } />
                 </Routes>
         </div>

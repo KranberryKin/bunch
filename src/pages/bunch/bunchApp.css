@@ -1,3 +1,15 @@
 .bunchApp-container{
     display: flex;
 }
+
+.bunchApp-page-container{
+    display: flex;
+    width: 80vw;
+}
+
+.bunchApp-navbar-container{
+    width: 15vw;
+    height: 80vh;
+    background-color: var(--bg3-color);
+    padding: .25vw;
+}
