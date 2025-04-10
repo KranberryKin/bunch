@@ -15,77 +15,101 @@ interface IUserForm {
 }
 
 const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
-    const navigate = useNavigate();
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
         verify_password:""
     })
+    
+    const [validUserForm, setValidUserForm] = useState<{userName:boolean, userErrorMsg: string, password:boolean,passwordErrorMsg:string, verify_password:boolean, verifyErrorMsg: string}>({
+        userName: true, 
+        userErrorMsg: "Username must be longer than 4 letters.",
+        password: true, 
+        passwordErrorMsg:"Password must be longer than 4 letters.",
+        verify_password:true,
+        verifyErrorMsg:"Passwords must match."
+    });
+        
+    const userFormKeys = Object.keys(userForm);
+    const navigate = useNavigate();
     const [creatingUser, setCreatingUser] = useState<boolean>(true);
     const userDBString = DataBase_Strings.Users_DB;
     const UserDataService = new LocalStorageManager<IUser>(userDBString);
-
+    let BunchUsers:IUser[] = UserDataService.values;
+    
     useEffect(() => {
         if(currentUser !== undefined){
             navigate("/my_profile");
         }
     },[currentUser])
-
-
+    
     const switchForms = () => {
         setInitialState();
         setCreatingUser(!creatingUser);
     }
-
+    
     const setInitialState = () => {
         setUserForm({
             userName:"",
             password:"",
             verify_password:""
         })
+        setValidUserForm({...validUserForm,
+            userName: true,
+            password: true,
+            verify_password: true,
+        })
     }
-
-    const updateUserName = (s:string) => {
-        setUserForm({
-            userName: s,
-            password: userForm.password,
-            verify_password: userForm.verify_password
-        });
-    }
-
     
-    const updatePassword = (s:string) => {
-        setUserForm({
-            userName: userForm.userName,
-            password: s,
-            verify_password: userForm.verify_password
-        });
+    const updateForm = (s:string, key:string) => {
+        if(userFormKeys.includes(key)){
+            setUserForm({...userForm, [key]: s});
+        }else{
+            console.log("Failed to update Form");
+        }
     }
 
-    
-    const updateVerify = (s:string) => {
-        setUserForm({
-            userName: userForm.userName,
-            password: userForm.password,
-            verify_password: s
-        });
-    }
-
-    const validateForm = (formData:IUserForm) => {
+    const doStringsMatch = (s1:string, s2:string) => {
         let isValid = true;
-        for(let i = 0; i < formData.password.length; i++){
-            let passChar = formData.password[i];
-            let variChar = formData.verify_password[i];
-            if(passChar !== variChar){
-                isValid = false;
+        if(s1.length !== s2.length){
+            isValid = false;
+        }else{
+            for(let i = 0; i < s1.length; i++){
+                let s1char = s1[i];
+                let s2char = s2[i];
+                if(s1char !== s2char){
+                    isValid = false;
+                }
             }
         }
         return isValid;
     }
-
-
+    
+    const validateForm = () => {
+        let isValid = true;
+        if(!doStringsMatch(userForm.password, userForm.verify_password) || userForm.password.length < 5){
+            setValidUserForm({...validUserForm, password: false, verify_password: false});
+            isValid = false;
+        }else{
+            setValidUserForm({...validUserForm, password: true, verify_password: true});
+        }
+        if (userForm.userName.length < 5){
+            setValidUserForm({...validUserForm, userName: false});
+            isValid = false;
+        } else {
+            setValidUserForm({...validUserForm, userName: true})
+        }
+        
+        if(BunchUsers.findIndex(user => user.user_name === userForm.userName) > -1){
+            setValidUserForm({...validUserForm, userName: false});
+            isValid = false;
+            console.log("User Already Exists")
+        }
+        return isValid;
+    }
+    
     const onSubmit = () => {
-        if(!validateForm(userForm)){
+        if(!validateForm()){
             console.log("Failed to Create User")
         }else{
             let newUser: IUser = {
@@ -95,6 +119,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
                 profile_picture: "",
             };
             UserDataService.add(newUser);
+            BunchUsers = UserDataService.values;
             newUser.password = "";
             userSessionManager.saveSessionData(newUser, 10)
             setCurrentUser(newUser);
@@ -106,10 +131,9 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             }
         }
     }
-
+    
     const login = () => {
-        let BunchUsers:IUser[] = UserDataService.values;
-
+        
         const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
         let foundUser:IUser = {} as IUser;
         if(foundUserIndex > -1){
@@ -118,17 +142,8 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             console.error("Couldn't find User")
             return;
         }
-
-        let isValid = true;
-        for(let i =0; i < foundUser.password.length; i++){
-            const passChar = foundUser.password[i];
-            const formChar = userForm.password[i];
-            if(passChar !== formChar){
-                isValid = false;
-            }
-        }
-
-        if(isValid){
+        
+        if(doStringsMatch(foundUser.password, userForm.password)){
             foundUser.password = "";
             userSessionManager.saveSessionData(foundUser, 10)
             setCurrentUser(foundUser)
@@ -136,10 +151,21 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         }else{
             console.error("Passwords Don't Match")
         }
-
+        
     }
-
-
+    
+    const LabelInput = (key:string, index:number) => {
+        return (<>
+            <label key={key + index} htmlFor={key}>{key.toLocaleLowerCase().replace("_", " ")}</label>
+            <input key={key + index + index} name={key} value={userForm[key]} type={key.includes("password") ? "password" : "text"} onChange={(e) => updateForm(e.target.value, e.target.name)}/>
+            <div hidden={validUserForm[key] || !creatingUser} style={{color: "red"}}>
+                {userFormKeys[0] == key ?  validUserForm.userErrorMsg: 
+                userFormKeys[1] == key ?  validUserForm.passwordErrorMsg :
+                validUserForm.verifyErrorMsg}
+                </div>
+            </>)
+    }
+    
     const title = 'Please create an Account or Login'
     return (<div className="login-container">
         <div className="login-title">
@@ -148,33 +174,15 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         <div className="form-filter-container">
             {creatingUser ? <Button buttonLabel="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button buttonLabel="New User?" backgroundClass="bg-green" clicked={switchForms} />}
         </div>
-        <div className={creatingUser ? "form-container" : "hidden form-container"}>
-            <label htmlFor="userName">UserName</label>
-            <input name="userName" value={userForm.userName} type="text" onChange={(e) => updateUserName(e.target.value)} />
-
-            <label htmlFor="password">Password</label>
-            <input name="password" value={userForm.password} type="password" onChange={(e) => updatePassword(e.target.value)} />
-
-            <label htmlFor="verify">Re-Enter Password</label>
-            <input name="verify" value={userForm.verify_password} type="password" onChange={(e) => updateVerify(e.target.value)} />
-
+        <div className="form-container">
+            {userFormKeys.map((key, index) => {
+                return(<>{creatingUser ? LabelInput(key, index)
+                    : <>{key.includes("verify") ? <></> : LabelInput(key, index)} </>
+                }</>)
+            })}
             <div className="login-button-container">
                 <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button buttonLabel="Submit" clicked={onSubmit} backgroundClass="bg-green"/>
-            </div>
-        </div>
-
-        <div className={creatingUser ? "hidden form-container" : "form-container"}>
-            <label htmlFor="userName">UserName</label>
-            <input name="userName" value={userForm.userName} type="text" onChange={(e) => updateUserName(e.target.value)} />
-
-            <label htmlFor="password">Password</label>
-            <input name="password" value={userForm.password} type="password" onChange={(e) => updatePassword(e.target.value)} />
-
-
-            <div className="login-button-container">
-                <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button buttonLabel="Login" clicked={login} backgroundClass="bg-green"/>
+                <Button buttonLabel={creatingUser ? "Submit" : "Login"} clicked={creatingUser ? onSubmit : login} backgroundClass="bg-green"/>
             </div>
         </div>
     </div>)
