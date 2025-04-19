@@ -15,12 +15,11 @@ function App() {
 ]
   return (
     <div className="App">
-      <Router>
-        <Header currentUser={currentUser} page_options={page_options}/>
-        <Body currentUser={currentUser} setCurrentUser={setCurrentUser} page_options={page_options}/>
-        <Footer />
-      </Router>
-
+        <Router>
+          <Header currentUser={currentUser} page_options={page_options}/>
+          <Body currentUser={currentUser} setCurrentUser={setCurrentUser} page_options={page_options}/>
+          <Footer />
+        </Router>
     </div>
   );
 }

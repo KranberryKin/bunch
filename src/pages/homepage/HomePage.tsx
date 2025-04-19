@@ -7,6 +7,7 @@ const HomePage = () => {
     const versionTitle = "Version Updates"
     const versionDescription = "Here you can find the recent updates to the App of changes to UI/UX 'User Interaction & User Experience'."
     const updates: string[] = [
+        "4/19/25 Created Notify Context, Used to send Alerts to the User. Context created so functions can be used app-wide. Now used in Login page and more!",
         "4/9/25 Updated Login page functionality, also added new alerts and verification on the login page.",
         "12/11/24 Updated the ProfilePage to allow users to change their username, and upload an profile picture if desired. Slight changes to LocalStorageManager, Id generation is handled on object creation/save instead of needing to be assigned beforehand.",
         "12/6/24 Changes Background Color and Header/Footer Color. Also added Toggle for Light and Dark Themes(Default Light, Click ⚙️ Icon in Header)",

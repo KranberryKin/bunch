@@ -1,0 +1,19 @@
+.notify{
+position: absolute;
+background-color: #000;
+color: white;
+left: 85%;
+top: 10%;
+padding: .5rem;
+border-radius: .25rem;
+display: flex;
+}
+
+.notify-button-container{
+align-self: center;
+padding-left: .5rem;
+}
+
+.hidden{
+display: none; 
+}

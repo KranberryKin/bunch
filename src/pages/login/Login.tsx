@@ -7,6 +7,7 @@ import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
+import { useNotify } from "../../contextProvider/notifyContext.tsx";
 
 interface IUserForm {
     userName:string;
@@ -20,7 +21,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         password:"",
         verify_password:""
     })
-    
+
     const [validUserForm, setValidUserForm] = useState<{userName:boolean, userErrorMsg: string, password:boolean,passwordErrorMsg:string, verify_password:boolean, verifyErrorMsg: string}>({
         userName: true, 
         userErrorMsg: "Username must be longer than 4 letters.",
@@ -36,6 +37,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     const userDBString = DataBase_Strings.Users_DB;
     const UserDataService = new LocalStorageManager<IUser>(userDBString);
     let BunchUsers:IUser[] = UserDataService.values;
+    const {sendNotify} = useNotify();
     
     useEffect(() => {
         if(currentUser !== undefined){
@@ -103,7 +105,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         if(BunchUsers.findIndex(user => user.user_name === userForm.userName) > -1){
             setValidUserForm({...validUserForm, userName: false});
             isValid = false;
-            console.log("User Already Exists")
+            sendNotify("User Already Exists")
         }
         return isValid;
     }
@@ -139,17 +141,17 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         if(foundUserIndex > -1){
             foundUser = BunchUsers[foundUserIndex];
         }else{
-            console.error("Couldn't find User")
+            sendNotify("Couldn't find User")
             return;
         }
         
         if(doStringsMatch(foundUser.password, userForm.password)){
             foundUser.password = "";
-            userSessionManager.saveSessionData(foundUser, 10)
-            setCurrentUser(foundUser)
+            userSessionManager.saveSessionData(foundUser, 10);
+            setCurrentUser(foundUser);
             navigate("/my_profile");
         }else{
-            console.error("Passwords Don't Match")
+            sendNotify("Passwords Don't Match")
         }
         
     }
