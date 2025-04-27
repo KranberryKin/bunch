@@ -106,7 +106,7 @@ class LocalStorageManager<T extends {id:number}> {
             }
             return newId;
         }catch (error){
-            console.error(`Error deleting item from localStorage with key "${this._key}":`, error);
+            console.error(`Error Generating ID for item in localStorage with key "${this._key}":`, error);
             return -1; 
         } 
     }
