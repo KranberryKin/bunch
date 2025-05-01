@@ -10,16 +10,16 @@ function App() {
   const page_options = [
     {page_name:"Home", page_url: "/bunch"},
     {page_name:"Profile", page_url: "/my_profile"},
-    {page_name:"Login", page_url:"/login"}
+    {page_name:"Login", page_url:"/login"},
+    {page_name: "BunchApp", page_url: "/bunchApp"}
 ]
   return (
     <div className="App">
-      <Router>
-        <Header currentUser={currentUser} page_options={page_options}/>
-        <Body currentUser={currentUser} setCurrentUser={setCurrentUser} page_options={page_options}/>
-        <Footer />
-      </Router>
-
+        <Router>
+          <Header currentUser={currentUser} page_options={page_options}/>
+          <Body currentUser={currentUser} setCurrentUser={setCurrentUser} page_options={page_options}/>
+          <Footer />
+        </Router>
     </div>
   );
 }

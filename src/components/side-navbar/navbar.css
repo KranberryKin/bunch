@@ -1,0 +1,38 @@
+.bunchApp-navbar-container{
+    display: block;
+    width: 15vw;
+    transition: .55s ease-in-out;
+}
+
+.bunchApp-navbar-container.open{
+    transform: translateX(0);
+}
+
+.bunchApp-navbar-container.closed{
+    width: 0;
+    transform: translateX(-15vw);
+}
+
+.nav-button{
+    position: absolute;
+    left: 14.5vw;
+    background-color: black;
+    color: white;
+    border-radius: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    top: 50vh;
+}
+
+.navbar-option{
+    text-align: center;
+    border: 1px black solid;
+    border-radius: 15px;
+    padding: 3px 10px;
+    margin-top: 7px;
+    width: fit-content;
+    justify-self: center;
+    cursor: pointer;
+}
