@@ -7,10 +7,15 @@ const Budget = () => {
 
     return (
         <div className="budget-main-container">
-            <div>Your Budgets <button>Add</button> </div>
-            <div>{budgets.map((budget, index) => (
+            <div>
+                Your Budgets 
+                <button>Add</button> 
+            </div>
+            <div>
+                {budgets.map((budget, index) => (
                 <div key={`${budget.name} ${index}`}>{budget.name}</div>
-            ))}</div>
+                ))}
+            </div>
         </div>
     )
 }
