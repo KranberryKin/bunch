@@ -1,6 +1,6 @@
 .bunchApp-navbar-container{
     display: block;
-    width: 15vw;
+    width: 10vw;
     transition: .55s ease-in-out;
 }
 
@@ -10,12 +10,12 @@
 
 .bunchApp-navbar-container.closed{
     width: 0;
-    transform: translateX(-15vw);
+    transform: translateX(-10vw);
 }
 
 .nav-button{
     position: absolute;
-    left: 14.5vw;
+    left: 10vw;
     background-color: black;
     color: white;
     border-radius: 13px;

@@ -14,7 +14,7 @@ interface INotify {
 
 const NotifyContext = createContext({ sendNotify: (str: string) => {} });
 
-export const NotifyProvider = ({Children}) => {
+export const NotifyProvider = ({Children}:{Children:any}) => {
     const [notifys, setNotifys] = useState<INotify[]>([]);
     const [checking, setChecking] = useState<boolean>(false);
 
@@ -53,6 +53,7 @@ export const NotifyProvider = ({Children}) => {
             setChecking(false);
         }
     }
+
     const sendNotify = (str:string) => {
         const newNotifys = [...notifys ]
         newNotifys.push(createNotify(Statis.none, str))
@@ -62,7 +63,7 @@ export const NotifyProvider = ({Children}) => {
     return(<NotifyContext.Provider value={{sendNotify}}>
         <div className="notify">
         {notifys.length === 0 ? null : notifys.map((notify) => {
-            return(<Notify message={notify.message}/>)
+            return(<Notify message={notify.message}/>);
         })}
 
         </div>
