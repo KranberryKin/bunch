@@ -8,7 +8,7 @@ import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 import BunchApp from "../../pages/bunch/bunchApp.tsx";
 import { NotifyProvider } from "../../contextProvider/notifyContext.tsx";
-import Budget from "../../pages/buget/Budget.tsx";
+import Budget from "../../pages/budget/Budget.tsx";
 
 
 const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
