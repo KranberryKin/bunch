@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './login.css'
-import IUser from "../../constants/interfaces/user";
+import IUser from "../../constants/interfaces/user.ts";
 import Button from "../../components/button/button.tsx";
 import { useNavigate } from "react-router-dom";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
@@ -14,6 +14,11 @@ interface IUserForm {
     password:string;
     verify_password:string;
 }
+interface IValidUserForm {
+    userName:boolean, 
+    password:boolean,
+    verify_password:boolean, 
+}
 
 const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
     const [userForm, setUserForm] = useState<IUserForm>({
@@ -21,14 +26,14 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         password:"",
         verify_password:""
     })
+    const userErrorMsg: string = "Username must be longer than 4 letters.";
+    const passwordErrorMsg: string ="Password must be longer than 4 letters.";
+    const verifyErrorMsg: string ="Passwords must match.";
 
-    const [validUserForm, setValidUserForm] = useState<{userName:boolean, userErrorMsg: string, password:boolean,passwordErrorMsg:string, verify_password:boolean, verifyErrorMsg: string}>({
+    const [validUserForm, setValidUserForm] = useState<IValidUserForm>({
         userName: true, 
-        userErrorMsg: "Username must be longer than 4 letters.",
         password: true, 
-        passwordErrorMsg:"Password must be longer than 4 letters.",
         verify_password:true,
-        verifyErrorMsg:"Passwords must match."
     });
         
     const userFormKeys = Object.keys(userForm);
@@ -119,6 +124,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
                 user_name: userForm.userName,
                 password:userForm.password,
                 profile_picture: "",
+                prefered_theme: "light"
             };
             UserDataService.add(newUser);
             BunchUsers = UserDataService.values;
@@ -159,11 +165,11 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     const LabelInput = (key:string, index:number) => {
         return (<>
             <label key={key + index} htmlFor={key}>{key.toLocaleLowerCase().replace("_", " ")}</label>
-            <input key={key + index + index} name={key} value={userForm[key]} type={key.includes("password") ? "password" : "text"} onChange={(e) => updateForm(e.target.value, e.target.name)}/>
-            <div hidden={validUserForm[key] || !creatingUser} style={{color: "red"}}>
-                {userFormKeys[0] == key ?  validUserForm.userErrorMsg: 
-                userFormKeys[1] == key ?  validUserForm.passwordErrorMsg :
-                validUserForm.verifyErrorMsg}
+            <input key={key + index + index} name={key} value={userForm[key as keyof IUserForm]} type={key.includes("password") ? "password" : "text"} onChange={(e) => updateForm(e.target.value, e.target.name)}/>
+            <div hidden={validUserForm[key as keyof IValidUserForm] || !creatingUser} style={{color: "red"}}>
+                {userFormKeys[0] == key ?  userErrorMsg: 
+                userFormKeys[1] == key ?  passwordErrorMsg :
+                verifyErrorMsg}
                 </div>
             </>)
     }
@@ -177,7 +183,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             {creatingUser ? <Button buttonLabel="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button buttonLabel="New User?" backgroundClass="bg-green" clicked={switchForms} />}
         </div>
         <div className="form-container">
-            {userFormKeys.map((key, index) => {
+            {userFormKeys.map((key:string, index:number) => {
                 return(<>{creatingUser ? LabelInput(key, index)
                     : <>{key.includes("verify") ? <></> : LabelInput(key, index)} </>
                 }</>)

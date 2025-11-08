@@ -3,24 +3,60 @@ import { IPageContent } from "../../constants/interfaces/page";
 import "./header.css";
 import React, { useEffect, useState } from "react";
 import IUser from "../../constants/interfaces/user";
+import LocalStorageManager from "../../services/LocalStorageManager.ts";
+import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
+import SessionDataManager from "../../services/SessionDataManager.ts";
 
-const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
+const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
     const title = "Bunch";
     const navigate = useNavigate();
+    const userRepo = new LocalStorageManager<IUser>(DataBase_Strings.Users_DB);
     const setPage = (url: string) => {
         navigate(url);
     }
     const [theme, setTheme] = useState("light");
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme)
-    },[theme])
+            document.documentElement.setAttribute('data-theme', theme)
+    },[theme, theme.length])
+
+    useEffect(() => {
+        if(currentUser?.prefered_theme){
+            setTheme(currentUser.prefered_theme);
+        }
+        console.log("currentUser?.prefered_theme", currentUser?.prefered_theme)
+        console.log("currentUser", currentUser)
+    },[currentUser?.prefered_theme])
 
     const changeThemes = () => {
         if(theme === "light"){
-            setTheme('dark')
+            if(currentUser){
+                const objToReplicate = userRepo.getDataById(currentUser.id);
+                if(objToReplicate){
+                    let userToUpdate: IUser = {...objToReplicate, prefered_theme:'dark'};
+                    userRepo.updateData(userToUpdate);
+                    userToUpdate.password = "";
+                    setCurrentUser(userToUpdate);
+                    userSessionManager.clearSession();
+                    userSessionManager.saveSessionData(userToUpdate, 10);
+                }
+            }else{
+                setTheme('dark')
+            }
         }else{
-            setTheme('light')
+            if(currentUser){
+                const objToReplicate = userRepo.getDataById(currentUser.id);
+                if(objToReplicate){
+                    let userToUpdate: IUser = {...objToReplicate, prefered_theme:'light'};
+                    userRepo.updateData(userToUpdate);
+                    userToUpdate.password = "";
+                    setCurrentUser(userToUpdate);
+                    userSessionManager.clearSession();
+                    userSessionManager.saveSessionData(userToUpdate, 10);
+                }else{
+                    setTheme('light')
+                }
+            }
         } 
     }
 

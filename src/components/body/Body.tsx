@@ -11,9 +11,8 @@ import { NotifyProvider } from "../../contextProvider/notifyContext.tsx";
 import Budget from "../../pages/buget/Budget.tsx";
 
 
-const Body = ({currentUser, setCurrentUser, page_options} :{currentUser: IUser | undefined, setCurrentUser: (s:IUser) => void, page_options: IPageContent[]}) => {
-    const userSessionLocal = "userSession";
-    const userSessionManager = new SessionDataManager<IUser>(userSessionLocal);
+const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
+
     const navigate = useNavigate();
   
     useEffect(() => {

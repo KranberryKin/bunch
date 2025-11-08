@@ -12,7 +12,7 @@ interface IEditUserForm {
     user_name: string;
 }
 
-const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser: IUser | undefined, setCurrentUser: (IUser) => void, userSessionManager: SessionDataManager<IUser>}) => {
+const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser: IUser | undefined, setCurrentUser: (user:IUser | undefined) => void, userSessionManager: SessionDataManager<IUser>}) => {
     const navigate = useNavigate();
     const userDBString = DataBase_Strings.Users_DB;
     const userDataService = new LocalStorageManager<IUser>(userDBString);
@@ -73,7 +73,8 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
                     id: currentUserData.id,
                     user_name: (editUserState.user_name !== "" && editUserState.user_name !== currentUser?.user_name) ? editUserState.user_name : currentUser.user_name,
                     profile_picture: editUserState.profile_picture,
-                    password: currentUserData.password
+                    password: currentUserData.password,
+                    prefered_theme: currentUser.prefered_theme
                 };
                 userDataService.updateData(userToUpdate);
                 userSessionManager.clearSession();

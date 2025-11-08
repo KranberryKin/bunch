@@ -44,7 +44,7 @@ class LocalStorageManager<T extends {id:number}> {
             if(objIndex > -1){
                 return this.values[objIndex];
             }else{
-                throw new Error("Data Not Found By Id '${id}'");
+                throw new Error(`Data Not Found By Id '${id}'`);
             }
         } catch (error){
             console.error(`Error getting item from localStorage with key "${this._key}":`, error);
@@ -59,7 +59,7 @@ class LocalStorageManager<T extends {id:number}> {
             if(objToUpdate !== undefined){
                 for(let i = 0; i < keys.length; i++){
                     const key = keys[i];
-                    objToUpdate[key] = obj[key];
+                    objToUpdate[key as keyof T] = obj[key as keyof T];
                 }
                 const removeObjIndex =  this.values.findIndex(vObj => vObj.id === obj.id);
                 if(removeObjIndex > -1){
