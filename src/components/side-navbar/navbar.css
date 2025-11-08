@@ -26,13 +26,9 @@
     top: 50vh;
 }
 
-.navbar-option{
-    text-align: center;
-    border: 1px black solid;
-    border-radius: 15px;
-    padding: 3px 10px;
-    margin-top: 7px;
-    width: fit-content;
-    justify-self: center;
-    cursor: pointer;
+.navbar-options-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 1.5vh;
 }

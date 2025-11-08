@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import "./navbar.css"
 import { NAVBAR_CONSTANTS } from "../../constants/initial-states/navBar.ts"
 import { useNavigate } from "react-router-dom";
+import Button from "../button/button.tsx";
 
 const NavBar = () => {
     const pages = NAVBAR_CONSTANTS.page_names;
@@ -19,9 +20,11 @@ const NavBar = () => {
     return (
         <div className={`bunchApp-navbar-container ${isOpen ? "open" : "closed"}`}>
             <div title={isOpen ? "Close" : "Open"} className="nav-button" onClick={toggleSidebar}>{isOpen ? "<" : ">"}</div>
-            <div>
+            <div className="navbar-options-container">
                 {pages.map((page_name, index) => (
-                    <div onClick={() => changePage(page_name.page)} className="navbar-option" id={page_name.name + `${index}`}>{page_name.name}</div>
+                    <div className="navbar-option" id={page_name.name + `${index}`}>
+                        <Button clicked={() => changePage(page_name.page)} buttonLabel={page_name.name} /> 
+                    </div>
                 ))}
             </div>
         </div>
