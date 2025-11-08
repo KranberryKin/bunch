@@ -7,6 +7,7 @@ const HomePage = () => {
     const versionTitle = "Version Updates"
     const versionDescription = "Here you can find the recent updates to the App of changes to UI/UX 'User Interaction & User Experience'."
     const updates: string[] = [
+        "11/8/25 Saves and updates session upon theme selection. Once in preffered mode, refresh and stay in same mode.",
         "4/27/25 Updated Notify to display multiple Alerts & updated Side Navbar on BunchApp. ",
         "4/19/25 Created Notify Context, Used to send Alerts to the User. Context created so functions can be used app-wide. Now used in Login page and more!",
         "4/9/25 Updated Login page functionality, also added new alerts and verification on the login page.",

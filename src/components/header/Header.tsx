@@ -26,36 +26,38 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
         }
         console.log("currentUser?.prefered_theme", currentUser?.prefered_theme)
         console.log("currentUser", currentUser)
-    },[currentUser?.prefered_theme])
+    },[currentUser?.prefered_theme]);
+
+    const updateUserPrefTheme = (currentUser:IUser, prefTheme: string) => {
+                const objToReplicate = userRepo.getDataById(currentUser.id);
+                if(objToReplicate){
+                    let userToUpdate: IUser = {...objToReplicate, prefered_theme: prefTheme};
+                    userRepo.updateData(userToUpdate);
+                    userToUpdate.password = "";
+                    setCurrentUser(userToUpdate);
+                    return userToUpdate;
+                }
+                return currentUser;
+    }
+    const updateSessionPrefTheme = (updatedUser:IUser) => {
+                    userSessionManager.clearSession();
+                    userSessionManager.saveSessionData(updatedUser, 10);
+    }
 
     const changeThemes = () => {
         if(theme === "light"){
             if(currentUser){
-                const objToReplicate = userRepo.getDataById(currentUser.id);
-                if(objToReplicate){
-                    let userToUpdate: IUser = {...objToReplicate, prefered_theme:'dark'};
-                    userRepo.updateData(userToUpdate);
-                    userToUpdate.password = "";
-                    setCurrentUser(userToUpdate);
-                    userSessionManager.clearSession();
-                    userSessionManager.saveSessionData(userToUpdate, 10);
-                }
+               const updatedUser = updateUserPrefTheme(currentUser, "dark")
+               updateSessionPrefTheme(updatedUser)
             }else{
                 setTheme('dark')
             }
         }else{
             if(currentUser){
-                const objToReplicate = userRepo.getDataById(currentUser.id);
-                if(objToReplicate){
-                    let userToUpdate: IUser = {...objToReplicate, prefered_theme:'light'};
-                    userRepo.updateData(userToUpdate);
-                    userToUpdate.password = "";
-                    setCurrentUser(userToUpdate);
-                    userSessionManager.clearSession();
-                    userSessionManager.saveSessionData(userToUpdate, 10);
-                }else{
-                    setTheme('light')
-                }
+                const updatedUser = updateUserPrefTheme(currentUser, "light")
+                updateSessionPrefTheme(updatedUser)
+            }else{
+                setTheme('light')
             }
         } 
     }
