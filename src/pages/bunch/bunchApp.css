@@ -4,7 +4,10 @@
 
 .bunchApp-page-container{
     display: flex;
-    width: 80vw;
+    flex-direction: column;
+    width: 90vw;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
 }
 
 .bunchApp-navbar-container{

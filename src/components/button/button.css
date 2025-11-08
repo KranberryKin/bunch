@@ -1,9 +1,11 @@
 .button-container{
     display: flex;
     flex-direction: column;
-    border: 1px black solid;
+    border: 1.5px black solid;
     border-radius: 15px;
-    padding: 10px;
+    padding: 8px;
+    text-align: center;
+    width: fit-content;
     color: white;
     cursor: pointer;
 }

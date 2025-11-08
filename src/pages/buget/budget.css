@@ -2,3 +2,21 @@
     display: flex;
     flex-direction: column;
 }
+
+.title-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px 0 15px; 
+}
+
+.budget-table{
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    margin: 15px;
+    height: 65vh;
+    overflow-y: scroll;
+}
