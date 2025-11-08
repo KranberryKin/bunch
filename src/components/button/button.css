@@ -1,11 +1,17 @@
 .button-container{
     display: flex;
     flex-direction: column;
-    border: 1px black solid;
+    border: 1.5px black solid;
     border-radius: 15px;
-    padding: 10px;
-    color: white;
+    padding: 8px;
+    text-align: center;
+    width: fit-content;
+    color: var( --text-color);
     cursor: pointer;
+    background-color: var(--bg2-color);
+}
+.button-container:hover{
+    background-color: var(--bg3-color);
 }
 .bg-red{
     background-color: red;

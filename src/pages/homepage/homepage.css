@@ -10,4 +10,6 @@
 .version-updates{
     display: block;
     width: 55vw;
+    overflow-y: scroll;
+    height: 35vh;
 }

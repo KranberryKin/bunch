@@ -15,6 +15,7 @@ code {
 :root {
   --bg-color: #e6e6e6;
   --bg2-color: #f5f5f5;
+  --bg3-color: #c7c6c6;
   --text-color: #000000;
   --accent-color: #0078d7;
 }
@@ -23,6 +24,7 @@ code {
 [data-theme='dark'] {
   --bg-color: #1e1e1e;
   --bg2-color: #373636;
+  --bg3-color: #4c4c4c;
   --text-color: #ffffff;
   --accent-color: #d896ff;
 }
