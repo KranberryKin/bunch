@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import './budget.css'
-import { IBudget } from "../../constants/interfaces/budget";
+import { IBudget } from "../../constants/interfaces/budget.ts";
 import Button from "../../components/button/button.tsx";
 
 const Budget = () => {
