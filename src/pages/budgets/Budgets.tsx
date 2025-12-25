@@ -3,7 +3,7 @@ import './budget.css'
 import { IBudget } from "../../constants/interfaces/budget.ts";
 import Button from "../../components/button/button.tsx";
 
-const Budget = () => {
+const Budgets = () => {
     const [budgets, setBudgets] = useState<IBudget[]>([]);
 
     
@@ -27,4 +27,4 @@ const Budget = () => {
     )
 }
 
-export default Budget;
+export default Budgets;

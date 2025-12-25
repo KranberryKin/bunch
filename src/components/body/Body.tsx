@@ -8,7 +8,7 @@ import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 import BunchApp from "../../pages/bunch/bunchApp.tsx";
 import { NotifyProvider } from "../../contextProvider/notifyContext.tsx";
-import Budget from "../../pages/budget/Budget.tsx";
+import Budgets from "../../pages/budgets/Budgets.tsx";
 
 
 const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
@@ -41,7 +41,7 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
                     <Route path="/bunchApp/*" element={
                       <BunchApp  childern={
                       <Routes>
-                        <Route path="/budget" element={<Budget/>} />
+                        <Route path="/budget" element={<Budgets/>} />
                         <Route path="/*" element={null} />
                       </Routes>
                       }/>
