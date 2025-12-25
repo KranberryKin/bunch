@@ -6,7 +6,7 @@ import IUser from "../../constants/interfaces/user";
 import IUserThemePref from "../../constants/interfaces/userThemePref";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 
-const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
+const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
     const title = "Bunch";
     const navigate = useNavigate();
     const userPrefLocal = "userPref";
@@ -87,7 +87,11 @@ const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, pag
             </div>
             <div className="options-container">
                 {page_options.map((obj, index) => {
-                    if(currentUser === undefined && obj.page_name == page_options[1].page_name){
+                    if(
+                            currentUser === undefined && 
+                            (obj.page_name == page_options[1].page_name ||
+                             obj.page_name == page_options[3].page_name)
+                        ){
                         return;
                     }else if(currentUser !== undefined && obj.page_name == page_options[2].page_name){
                         return;

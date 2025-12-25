@@ -6,8 +6,10 @@ interface ISessionData {
 
 class SessionDataManager<T> {
     private _key;
+    public session: ISessionData | undefined;
     constructor(key:string) {
-        this._key = key;
+      this._key = key;
+      this.session = this.getSession();
     }
 
     saveSessionData( value: object, expiryInMinutes: number): void {
@@ -17,6 +19,11 @@ class SessionDataManager<T> {
           expiry: expiryInMinutes * 60 * 1000, // Convert minutes to milliseconds
         };
         window.localStorage.setItem(this._key, JSON.stringify(sessionData));
+      }
+
+      getSession(){
+        const sessionString = window.localStorage.getItem(this._key);
+        return (sessionString !== null) ? JSON.parse(sessionString) : undefined;
       }
 
       checkSessionData<T>(): T | null {
