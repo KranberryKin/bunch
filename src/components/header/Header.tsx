@@ -3,63 +3,79 @@ import { IPageContent } from "../../constants/interfaces/page";
 import "./header.css";
 import React, { useEffect, useState } from "react";
 import IUser from "../../constants/interfaces/user";
+import IUserThemePref from "../../constants/interfaces/userThemePref";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
-import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
-import SessionDataManager from "../../services/SessionDataManager.ts";
 
 const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
     const title = "Bunch";
     const navigate = useNavigate();
-    const userRepo = new LocalStorageManager<IUser>(DataBase_Strings.Users_DB);
+    const userPrefLocal = "userPref";
+    const themes: string[] = ["light", "dark"]
+    const userThemeStorageManager = new LocalStorageManager<IUserThemePref>(userPrefLocal);
     const setPage = (url: string) => {
         navigate(url);
     }
-    const [theme, setTheme] = useState("light");
+    const [userTheme, setUserTheme] = useState<IUserThemePref | undefined>(undefined)
+    const [theme, setTheme] = useState(userTheme ? userTheme.theme : themes[0]);
 
     useEffect(() => {
-            document.documentElement.setAttribute('data-theme', theme)
-    },[theme, theme.length])
+        document.documentElement.setAttribute('data-theme', theme)
+    },[theme]);
 
     useEffect(() => {
-        if(currentUser?.prefered_theme){
-            setTheme(currentUser.prefered_theme);
+        if(userTheme != undefined){
+            setTheme(userTheme.theme);
         }
-        console.log("currentUser?.prefered_theme", currentUser?.prefered_theme)
-        console.log("currentUser", currentUser)
-    },[currentUser?.prefered_theme]);
+    },[userTheme])
+    
 
-    const updateUserPrefTheme = (currentUser:IUser, prefTheme: string) => {
-                const objToReplicate = userRepo.getDataById(currentUser.id);
-                if(objToReplicate){
-                    let userToUpdate: IUser = {...objToReplicate, prefered_theme: prefTheme};
-                    userRepo.updateData(userToUpdate);
-                    userToUpdate.password = "";
-                    setCurrentUser(userToUpdate);
-                    return userToUpdate;
-                }
-                return currentUser;
-    }
-    const updateSessionPrefTheme = (updatedUser:IUser) => {
-                    userSessionManager.clearSession();
-                    userSessionManager.saveSessionData(updatedUser, 10);
+    useEffect(() => {
+        if (currentUser != undefined && userThemeStorageManager.values.length === 0){
+            const userPref: IUserThemePref = {
+                id: -1,
+                userId: currentUser.id,
+                theme: theme
+            }
+            userThemeStorageManager.add(userPref);
+        }
+        assignUserTheme()
+    },[currentUser])
+
+    const assignUserTheme = () => {
+        if(currentUser != undefined){
+            const userPrefIndex: number = userThemeStorageManager.values.findIndex(obj => obj.userId === currentUser.id);
+            if(userPrefIndex >= 0){
+                const userPrefTheme: IUserThemePref = userThemeStorageManager.values[userPrefIndex];
+                setUserTheme(userPrefTheme);
+            };
+        };
     }
 
     const changeThemes = () => {
-        if(theme === "light"){
-            if(currentUser){
-               const updatedUser = updateUserPrefTheme(currentUser, "dark")
-               updateSessionPrefTheme(updatedUser)
-            }else{
-                setTheme('dark')
+        if(theme === themes[0]){
+            setTheme(themes[1])
+            if(userTheme != undefined){
+                const userPrefTheme: IUserThemePref = {
+                        id: userTheme.id,
+                        userId: userTheme.userId,
+                        theme: themes[1]
+                    }
+                userThemeStorageManager.updateData(userPrefTheme)
+
             }
         }else{
-            if(currentUser){
-                const updatedUser = updateUserPrefTheme(currentUser, "light")
-                updateSessionPrefTheme(updatedUser)
-            }else{
-                setTheme('light')
+            setTheme(themes[0]);
+            if(userTheme != undefined){
+                const userPrefTheme: IUserThemePref = {
+                        id:userTheme.id,
+                        userId: userTheme.userId,
+                        theme: themes[0]
+                    }
+                setUserTheme(userPrefTheme);
+                userThemeStorageManager.updateData(userPrefTheme)
             }
         } 
+        assignUserTheme();
     }
 
     return (
