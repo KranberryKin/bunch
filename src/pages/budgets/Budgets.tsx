@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import './budgets.css'
-import { IBudget } from "../../constants/interfaces/budget.ts";
 import Button from "../../components/button/button.tsx";
 import IUser from "../../constants/interfaces/user.ts";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../../components/custommodal/CustomModal.tsx";
+import BudgetForm from "../../components/forms/budgetform/BudetForm.tsx";
+import IBudget from "../../constants/interfaces/budget.ts";
 
 export interface IBudgetsProps {
     currentUser: IUser | undefined;
@@ -33,6 +34,11 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
         navigate(`/bunchApp/budget/${budget.id}`);
     }
 
+    const addBudget = () => {
+        setCustomModalContent({body_content: <BudgetForm currentUser={currentUser} onConfirm={()=>{}} onCancel={() => setCustomModalContent({body_content:undefined})}/>});
+    }
+
+
     
 
     return (
@@ -43,7 +49,7 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
                     Your Budgets 
                 </h4>
                 <div>
-                    <Button buttonLabel="Add" clicked={() => {}}/>
+                    <Button buttonLabel="Add" clicked={() => addBudget()}/>
                 </div>
             </div>
             <div className="budget-table">
