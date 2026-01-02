@@ -41,7 +41,7 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
                     <Route path="/bunchApp/*" element={
                       <BunchApp  childern={
                       <Routes>
-                        <Route path="/budget" element={<Budgets/>} />
+                        <Route path="/budget" element={<Budgets currentUser={currentUser}/>} />
                         <Route path="/*" element={null} />
                       </Routes>
                       }/>
