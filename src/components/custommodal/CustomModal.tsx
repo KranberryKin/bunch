@@ -14,11 +14,11 @@ const CustomModal = ({header_content, body_content, footer_content}:ICustomModal
     
     const [isClosed, setIsClosed] = useState<boolean>(true);
 
-    const buttonClicked = () => {
-        setIsClosed(!isClosed);
+    const closeModal = () => {
+        setIsClosed(true);
     }
 
-    const defaultHeader = <p onClick={() => buttonClicked()}>X</p>;
+    const defaultHeader: React.ReactNode = <div className="custom-modal-header" onClick={() => closeModal()}>X</div>;
 
     const defaultBody = <p>This needs to be set.</p>;
 
