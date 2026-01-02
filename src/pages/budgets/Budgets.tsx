@@ -34,11 +34,24 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
         navigate(`/bunchApp/budget/${budget.id}`);
     }
 
-    const addBudget = () => {
-        setCustomModalContent({body_content: <BudgetForm currentUser={currentUser} onConfirm={()=>{}} onCancel={() => setCustomModalContent({body_content:undefined})}/>});
+    const updateBudgets = () => {
+        budgetRepository.get();
+        setBudgets(budgetRepository.values.filter(budget => budget.user_id === currentUser?.id));
+        setCustomModalContent({body_content:undefined})
     }
 
+    const addBudget = () => {
+        setCustomModalContent({body_content: <BudgetForm currentUser={currentUser} onConfirm={()=> updateBudgets()} onCancel={() => setCustomModalContent({body_content:undefined})}/>});
+    }
 
+    const deleteBudget = (budget:IBudget) => {
+        if(!window.confirm(`Are you sure you want to delete the budget: ${budget.name}? This action cannot be undone.`)){
+            return;
+        }else{
+            budgetRepository.deleteData(budget)
+            updateBudgets();
+        }
+    };
     
 
     return (
@@ -54,7 +67,15 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
             </div>
             <div className="budget-table">
                 {budgets.map((budget, index) => (
-                <div onClick={selectBudget(budget)} key={`${budget.name} ${index}`}>{budget.name}</div>
+                <div className="budget-option" >
+                    <div className="budget-option-label" onClick={selectBudget(budget)} key={`${budget.name} ${index}`}>
+                        {budget.name}
+                    </div>
+                    <div className="budget-option-label" onClick={() => deleteBudget(budget)}>
+                        🗑️
+                    </div>
+                    
+                </div>
                 ))}
             </div>
         </div>

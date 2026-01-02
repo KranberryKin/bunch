@@ -3,11 +3,14 @@ import "./budgetform.css";
 import IBudget from "../../../constants/interfaces/budget.ts";
 import IUser from "../../../constants/interfaces/user.ts";
 import Button from "../../button/button.tsx";
+import LocalStorageManager from "../../../services/LocalStorageManager.ts";
+import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
 
 const BudgetForm = ({currentUser, onConfirm, onCancel}:{currentUser:IUser | undefined, onConfirm: () => any, onCancel:() => any }) => {
 
+    const budgetRepository = new LocalStorageManager<IBudget>(DataBase_Strings.Budget_DB);
     const [budgetForm, setBudgetForm] = useState<IBudget>({
-        id: 0,
+        id: budgetRepository.generateId(),
         name: "",
         user_id: currentUser?.id ?? 0,
         income_stream: [],
@@ -17,7 +20,7 @@ const BudgetForm = ({currentUser, onConfirm, onCancel}:{currentUser:IUser | unde
     useEffect(() => {
         if(currentUser){
             setBudgetForm({
-                id: 0,
+                id: budgetRepository.generateId(),
                 name: "",
                 user_id: currentUser.id,
                 income_stream: [],
@@ -28,9 +31,19 @@ const BudgetForm = ({currentUser, onConfirm, onCancel}:{currentUser:IUser | unde
     }, [currentUser]);
 
     const submitBudgetForm = () => {
+        if(budgetForm.name === ""){
+            alert("Please fill out all fields");
+            return;
+        }else{
+            budgetRepository.add(budgetForm);
+            setBudgetForm({...budgetForm, name: ""});
+            onConfirm();
+        };
+        
     };
 
     const cancelBudgetForm = () => {
+        setBudgetForm({...budgetForm, name: ""});
         onCancel();
     };
 
