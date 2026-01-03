@@ -1,4 +1,6 @@
 export const DataBase_Strings = {
     Users_DB: "bunch-users",
-    Budget_DB:"bunch-budget"
+    Budget_DB:"bunch-budget",
+    Income_Stream_DB: "bunch-income-stream",
+    Bills_DB: "bunch-bills"
 }

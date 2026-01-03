@@ -1,0 +1,44 @@
+.budget-details-main-container{
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}
+
+.budget-details-title-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 15px 0 15px;
+}
+
+.budget-details-income-stream-container{
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    margin: 15px;
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+.budget-details-bills-container{
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    margin: 15px;
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+.border-bottom{
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-padding{
+    padding-left: 10px;
+}
