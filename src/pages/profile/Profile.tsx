@@ -28,7 +28,7 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
 
     useEffect(() => {
         if(currentUser === undefined){
-            navigate(ROUTES.LOGIN);
+            navigate(ROUTES.URL.LOGIN);
         }
     },[currentUser]);
 

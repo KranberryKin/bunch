@@ -41,7 +41,7 @@ const Sprints = ({currentUser}: ISprintsProps) => {
     };
 
     const selectSprintz = (sprint: ISprintz) => {
-        navigate(`${ROUTES.SPRINT_DETAILS.replace(":sprintId", sprint.id.toString())}`);
+        navigate(`${ROUTES.navigate.sprintDetails.replace(":sprintId", sprint.id.toString())}`);
     };
 
 

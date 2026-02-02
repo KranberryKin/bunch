@@ -32,7 +32,7 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
     }, [currentUser]);
 
     const selectBudget = (budget: IBudget) => () => {
-        navigate(`${ROUTES.BUDGET_DETAILS.replace(":budgetId", budget.id.toString())}`);
+        navigate(`${ROUTES.navigate.budgetDetails.replace(":budgetId", budget.id.toString())}`);
     }
 
     const updateBudgets = () => {

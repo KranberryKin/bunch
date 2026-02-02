@@ -47,7 +47,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     
     useEffect(() => {
         if(currentUser !== undefined){
-            navigate(ROUTES.PROFILE);
+            navigate(ROUTES.URL.PROFILE);
         }
     },[currentUser])
     
@@ -136,7 +136,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             if(profileUrl !== undefined){
                 navigate(profileUrl);
             }else{
-                navigate(ROUTES.PROFILE);
+                navigate(ROUTES.URL.PROFILE);
             }
         }
     }

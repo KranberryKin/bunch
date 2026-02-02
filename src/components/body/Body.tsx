@@ -33,23 +33,23 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
     return (
         <div className="body-content">
           <NotifyProvider Children={<Routes>
-                    <Route path={ROUTES.HOMEPAGE} element={
+                    <Route path={ROUTES.URL.HOMEPAGE} element={
                       <HomePage />
                     }/>
-                    <Route path={ROUTES.PROFILE} element={
+                    <Route path={ROUTES.URL.PROFILE} element={
                       <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} userSessionManager={userSessionManager}/>
                     }/>
-                    <Route path={ROUTES.LOGIN} element={
+                    <Route path={ROUTES.URL.LOGIN} element={
                       <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                     }/>
-                    <Route path={ROUTES.BUNCH_APP + ROUTES.ETC} element={
+                    <Route path={ROUTES.URL.BUNCH_APP + "/*"} element={
                       <BunchApp  childern={
                       <Routes>
-                        <Route path={ROUTES.BUDGETS} element={<Budgets currentUser={currentUser}/>} />
-                        <Route path={ROUTES.BUDGET_DETAILS} element={<BudgetDetails />} />
-                        <Route path={ROUTES.SPRINTS} element={<Sprints currentUser={currentUser} />} />
-                        <Route path={ROUTES.SPRINT_DETAILS} element={<SprintDetails />} />
-                        <Route path={ROUTES.ETC} element={null} />
+                        <Route path={ROUTES.URL.BUDGETS} element={<Budgets currentUser={currentUser}/>} />
+                        <Route path={ROUTES.URL.BUDGET_DETAILS} element={<BudgetDetails />} />
+                        <Route path={ROUTES.URL.SPRINTS} element={<Sprints currentUser={currentUser} />} />
+                        <Route path={ROUTES.URL.SPRINT_DETAILS} element={<SprintDetails />} />
+                        <Route path="/*" element={null} />
                       </Routes>
                       }/>
                     } />
