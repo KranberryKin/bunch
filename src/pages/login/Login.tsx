@@ -8,6 +8,7 @@ import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import { useNotify } from "../../contextProvider/notifyContext.tsx";
+import { ROUTES } from "../../constants/initial-states/routes.ts";
 
 interface IUserForm {
     userName:string;
@@ -46,7 +47,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     
     useEffect(() => {
         if(currentUser !== undefined){
-            navigate("/my_profile");
+            navigate(ROUTES.PROFILE);
         }
     },[currentUser])
     
@@ -135,7 +136,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             if(profileUrl !== undefined){
                 navigate(profileUrl);
             }else{
-                navigate('/my_profile')
+                navigate(ROUTES.PROFILE);
             }
         }
     }

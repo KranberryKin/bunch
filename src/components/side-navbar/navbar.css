@@ -15,7 +15,7 @@
 
 .nav-button{
     position: absolute;
-    left: 10vw;
+    left: 9.25vw;
     background-color: black;
     color: white;
     border-radius: 13px;
@@ -23,12 +23,21 @@
     padding-right: 5px;
     padding-bottom: 3px;
     cursor: pointer;
-    top: 50vh;
+    top: 40vh;
 }
 
 .navbar-options-container{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding-top: 1.5vh;
+}
+
+.navbar-option{
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
 }

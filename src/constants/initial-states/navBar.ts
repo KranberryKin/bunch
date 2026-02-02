@@ -12,6 +12,10 @@ export const NAVBAR_CONSTANTS:INAVBAR_CONSTANTS = {
         {
             name: "Budget",
             page: "/bunchApp/budget",
+        },
+        {
+            name: "Sprints",
+            page: "/bunchApp/sprints",
         }
     ]
 }

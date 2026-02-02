@@ -5,13 +5,14 @@ import React, { useEffect, useState } from "react";
 import IUser from "../../constants/interfaces/user";
 import IUserThemePref from "../../constants/interfaces/userThemePref";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
+import SessionDataManager from "../../services/SessionDataManager.ts";
+import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 
 const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
     const title = "Bunch";
     const navigate = useNavigate();
-    const userPrefLocal = "userPref";
     const themes: string[] = ["light", "dark"]
-    const userThemeStorageManager = new LocalStorageManager<IUserThemePref>(userPrefLocal);
+    const userThemeStorageManager = new LocalStorageManager<IUserThemePref>(DataBase_Strings.UserPref_DB);
     const setPage = (url: string) => {
         navigate(url);
     }

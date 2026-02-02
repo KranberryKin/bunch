@@ -10,6 +10,9 @@ import BunchApp from "../../pages/bunch/bunchApp.tsx";
 import { NotifyProvider } from "../../contextProvider/notifyContext.tsx";
 import Budgets from "../../pages/budgets/Budgets.tsx";
 import BudgetDetails from "../../pages/budgets/budgetdetails/BudgetDetails.tsx";
+import Sprints from "../../pages/sprints/Sprints.tsx";
+import SprintDetails from "../../pages/sprints/sprintDetails/SprintDetails.tsx";
+import { ROUTES } from "../../constants/initial-states/routes.ts";
 
 
 const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
@@ -30,21 +33,23 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
     return (
         <div className="body-content">
           <NotifyProvider Children={<Routes>
-                    <Route path="/bunch" element={
+                    <Route path={ROUTES.HOMEPAGE} element={
                       <HomePage />
                     }/>
-                    <Route path='/my_profile' element={
+                    <Route path={ROUTES.PROFILE} element={
                       <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} userSessionManager={userSessionManager}/>
                     }/>
-                    <Route path='/login' element={
+                    <Route path={ROUTES.LOGIN} element={
                       <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                     }/>
-                    <Route path="/bunchApp/*" element={
+                    <Route path={ROUTES.BUNCH_APP + ROUTES.ETC} element={
                       <BunchApp  childern={
                       <Routes>
-                        <Route path="/budget" element={<Budgets currentUser={currentUser}/>} />
-                        <Route path="/budget/:budgetId" element={<BudgetDetails />} />
-                        <Route path="/*" element={null} />
+                        <Route path={ROUTES.BUDGETS} element={<Budgets currentUser={currentUser}/>} />
+                        <Route path={ROUTES.BUDGET_DETAILS} element={<BudgetDetails />} />
+                        <Route path={ROUTES.SPRINTS} element={<Sprints currentUser={currentUser} />} />
+                        <Route path={ROUTES.SPRINT_DETAILS} element={<SprintDetails />} />
+                        <Route path={ROUTES.ETC} element={null} />
                       </Routes>
                       }/>
                     } />

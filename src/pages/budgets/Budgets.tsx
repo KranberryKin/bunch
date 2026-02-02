@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import CustomModal from "../../components/custommodal/CustomModal.tsx";
 import BudgetForm from "../../components/forms/budgetform/BudetForm.tsx";
 import IBudget from "../../constants/interfaces/budget.ts";
+import { ROUTES } from "../../constants/initial-states/routes.ts";
 
 export interface IBudgetsProps {
     currentUser: IUser | undefined;
@@ -31,7 +32,7 @@ const Budgets = ({currentUser}:IBudgetsProps) => {
     }, [currentUser]);
 
     const selectBudget = (budget: IBudget) => () => {
-        navigate(`/bunchApp/budget/${budget.id}`);
+        navigate(`${ROUTES.BUDGET_DETAILS.replace(":budgetId", budget.id.toString())}`);
     }
 
     const updateBudgets = () => {
