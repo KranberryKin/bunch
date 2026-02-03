@@ -48,7 +48,7 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
                         <Route path={ROUTES.URL.BUDGETS} element={<Budgets currentUser={currentUser}/>} />
                         <Route path={ROUTES.URL.BUDGET_DETAILS} element={<BudgetDetails />} />
                         <Route path={ROUTES.URL.SPRINTS} element={<Sprints currentUser={currentUser} />} />
-                        <Route path={ROUTES.URL.SPRINT_DETAILS} element={<SprintDetails />} />
+                        <Route path={ROUTES.URL.SPRINT_DETAILS} element={<SprintDetails currentUser={currentUser} />} />
                         <Route path="/*" element={null} />
                       </Routes>
                       }/>
