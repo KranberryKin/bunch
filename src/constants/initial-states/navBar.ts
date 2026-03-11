@@ -17,7 +17,7 @@ export const NAVBAR_CONSTANTS:INAVBAR_CONSTANTS = {
             page: ROUTES.URL.BUDGETS,
         },
         {
-            name: "Sprints",
+            name: "Sprintz",
             page: ROUTES.URL.SPRINTS,
         }
     ]

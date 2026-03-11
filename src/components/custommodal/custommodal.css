@@ -8,6 +8,8 @@
     max-width: 90%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     animation: pop-in .5s ease;
+    overflow-y: scroll;
+    height: 30vh;
 }
 
 .custom-modal-header {

@@ -5,5 +5,8 @@ export const DataBase_Strings = {
     Bills_DB: "bunch-bills",
     Sprintz_DB: "bunch-sprintz",
     UserPref_DB: "userPref",
-    Tasks_DB: "bunch-tasks"
+    Tasks_DB: "bunch-tasks",
+    Task_Comments_DB: "bunch-task-comments",
+    Current_Sprints_DB: "bunch-current-sprints",
+    Current_Sprints_Tasks_DB: "bunch-current-sprints-tasks"
 }

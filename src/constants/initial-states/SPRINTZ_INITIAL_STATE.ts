@@ -10,21 +10,21 @@ const SPRINTZ_INITIAL_STATE: ISPRINTZ_INITIAL_STATE = {
     sprintzPageTitle: "Sprintz Page",
     toggleListDisplayState: [
         {
-            label: "Active Sprints",
+            label: "Active Sprintz",
             buttonTitle: "See Completed Sprints",
             isCompleted: false,
         },
         {
-            label: "Completed Sprints",
+            label: "Completed Sprintz",
             buttonTitle: "See All Sprints",
             isCompleted: true,
         },
         {
-            label: "All Sprints",
+            label: "All Sprintz",
             buttonTitle: "See All Sprints",
             isCompleted: false,
         }
     ],
-    createSprintButtonLabel: "+ Create Sprint"
+    createSprintButtonLabel: "+ Create Sprintz"
 };
 export default SPRINTZ_INITIAL_STATE;

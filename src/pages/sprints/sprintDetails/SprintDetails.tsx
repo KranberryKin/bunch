@@ -19,15 +19,15 @@ const SprintDetails = (props: ISprintDetailsProps) => {
     const sprintId = useParams().sprintId;
     const sprintsRepository = new LocalStorageManager<ISprintz>(DataBase_Strings.Sprintz_DB);
     const [displayMode, setDisplayMode] = useState<string>("Backlog");
-    const [currentSprint, setCurrentSprint] = useState<ISprintz | undefined>(undefined);
-
+    const [sprintz, setSprintz] = useState<ISprintz | undefined>(undefined);
+    
     const handlePageChange = (page: string) => () => {
         setDisplayMode(page);
     }
     useEffect(() => {
         if(sprintId && props.currentUser){
             const sprint = sprintsRepository.values.find(sprint => sprint.id === parseInt(sprintId) && sprint.userId === props.currentUser?.id);
-            setCurrentSprint(sprint);
+            setSprintz(sprint);
         }
     }, [sprintId, props.currentUser]);
 
@@ -38,7 +38,7 @@ const SprintDetails = (props: ISprintDetailsProps) => {
                     <h3 className="title-styles">{SPRINT_DETAILS_INITIAL_STATE.Page_Title}</h3>
                 </div>
                 <div>
-                    <h3>Title: {currentSprint?.title}</h3>
+                    <h3>Title: {sprintz?.title}</h3>
                 </div>
                 <div className="sprint-details-page-header-buttons-container">
                     <div>
@@ -57,13 +57,13 @@ const SprintDetails = (props: ISprintDetailsProps) => {
             </div>
             <div className="sprint-details-page-child-page-container">
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[0] ? "hidden" : ""}>
-                    <Backlog currentSprint={currentSprint}/>
+                    <Backlog currentUser={props.currentUser} Sprintz={sprintz}/>
                 </div>
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[1] ? "hidden" : ""}>
-                    <CurrentSprint currentSprint={currentSprint} />
+                    <CurrentSprint currentSprint={sprintz} />
                 </div>
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[2] ? "hidden" : ""}>
-                    <Statistics currentSprint={currentSprint} />
+                    <Statistics currentSprint={sprintz} />
                 </div>
             </div>
         </div>

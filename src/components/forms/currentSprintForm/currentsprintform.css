@@ -1,0 +1,12 @@
+.current-sprint-form-main-container{
+  display: flex;
+  flex-direction: column;
+}
+.current-sprint-form-title{
+  display: flex;
+  align-items: center;
+}
+.current-sprint-form-body{
+  display: flex;
+  flex-direction: column;
+}

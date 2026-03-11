@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import './login.css'
 import IUser from "../../constants/interfaces/user.ts";
 import Button from "../../components/button/button.tsx";
@@ -9,19 +9,20 @@ import { IPageContent } from "../../constants/interfaces/page.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import { useNotify } from "../../contextProvider/notifyContext.tsx";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
+import LoginService from "../../services/LoginService.ts";
 
-interface IUserForm {
+export interface IUserForm {
     userName:string;
     password:string;
     verify_password:string;
 }
-interface IValidUserForm {
+export interface IValidUserForm {
     userName:boolean, 
     password:boolean,
     verify_password:boolean, 
 }
 
-const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: (s:IUser) => void, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
+const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : {currentUser: IUser | undefined,setCurrentUser: React.Dispatch<React.SetStateAction<IUser | undefined>>, userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[]}) => {
     const [userForm, setUserForm] = useState<IUserForm>({
         userName:"",
         password:"",
@@ -44,6 +45,14 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     const UserDataService = new LocalStorageManager<IUser>(userDBString);
     let BunchUsers:IUser[] = UserDataService.values;
     const {sendNotify} = useNotify();
+    const loginService = new LoginService(
+        sendNotify,
+        BunchUsers,
+        navigate,
+        setValidUserForm,
+        UserDataService,
+        setCurrentUser ,
+        userSessionManager);
     
     useEffect(() => {
         if(currentUser !== undefined){
@@ -77,91 +86,6 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         }
     }
 
-    const doStringsMatch = (s1:string, s2:string) => {
-        let isValid = true;
-        if(s1.length !== s2.length){
-            isValid = false;
-        }else{
-            for(let i = 0; i < s1.length; i++){
-                let s1char = s1[i];
-                let s2char = s2[i];
-                if(s1char !== s2char){
-                    isValid = false;
-                }
-            }
-        }
-        return isValid;
-    }
-    
-    const validateForm = () => {
-        let isValid = true;
-        if(!doStringsMatch(userForm.password, userForm.verify_password) || userForm.password.length < 5){
-            setValidUserForm({...validUserForm, password: false, verify_password: false});
-            isValid = false;
-        }else{
-            setValidUserForm({...validUserForm, password: true, verify_password: true});
-        }
-        if (userForm.userName.length < 5){
-            setValidUserForm({...validUserForm, userName: false});
-            isValid = false;
-        } else {
-            setValidUserForm({...validUserForm, userName: true})
-        }
-        
-        if(BunchUsers.findIndex(user => user.user_name === userForm.userName) > -1){
-            setValidUserForm({...validUserForm, userName: false});
-            isValid = false;
-            sendNotify("User Already Exists")
-        }
-        return isValid;
-    }
-    
-    const onSubmit = () => {
-        if(!validateForm()){
-            console.log("Failed to Create User")
-        }else{
-            let newUser: IUser = {
-                id: -1,
-                user_name: userForm.userName,
-                password:userForm.password,
-                profile_picture: "",
-                prefered_theme: "light"
-            };
-            UserDataService.add(newUser);
-            BunchUsers = UserDataService.values;
-            newUser.password = "";
-            userSessionManager.saveSessionData(newUser, 10)
-            setCurrentUser(newUser);
-            const profileUrl = page_options.find(page => page.page_name = "Profile")?.page_url;
-            if(profileUrl !== undefined){
-                navigate(profileUrl);
-            }else{
-                navigate(ROUTES.URL.PROFILE);
-            }
-        }
-    }
-    
-    const login = () => {
-        
-        const foundUserIndex = BunchUsers.findIndex(user => user.user_name === userForm.userName);
-        let foundUser:IUser = {} as IUser;
-        if(foundUserIndex > -1){
-            foundUser = BunchUsers[foundUserIndex];
-        }else{
-            sendNotify("Couldn't find User")
-            return;
-        }
-        
-        if(doStringsMatch(foundUser.password, userForm.password)){
-            foundUser.password = "";
-            userSessionManager.saveSessionData(foundUser, 10);
-            setCurrentUser(foundUser);
-            navigate("/my_profile");
-        }else{
-            sendNotify("Passwords Don't Match")
-        }
-        
-    }
     
     const LabelInput = (key:string, index:number) => {
         return (<>
@@ -184,14 +108,11 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
             {creatingUser ? <Button buttonLabel="Login?" backgroundClass="bg-green" clicked={switchForms}/> : <Button buttonLabel="New User?" backgroundClass="bg-green" clicked={switchForms} />}
         </div>
         <div className="form-container">
-            {userFormKeys.map((key:string, index:number) => {
-                return(<>{creatingUser ? LabelInput(key, index)
-                    : <>{key.includes("verify") ? <></> : LabelInput(key, index)} </>
-                }</>)
-            })}
+            {userFormKeys.map((key:string, index:number) => (creatingUser ? LabelInput(key, index) : key.includes("verify") ? null : LabelInput(key, index)))}
+                
             <div className="login-button-container">
                 <Button buttonLabel="Clear" clicked={setInitialState} backgroundClass="bg-red"/>
-                <Button buttonLabel={creatingUser ? "Submit" : "Login"} clicked={creatingUser ? onSubmit : login} backgroundClass="bg-green"/>
+                <Button buttonLabel={creatingUser ? "Submit" : "Login"} clicked={creatingUser ? () => loginService.onSubmit(userForm, validUserForm, page_options) : () => loginService.login(userForm)} backgroundClass="bg-green"/>
             </div>
         </div>
     </div>)

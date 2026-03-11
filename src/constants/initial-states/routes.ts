@@ -9,11 +9,12 @@ interface IRoutePaths {
         BUDGET_DETAILS: string;
         SPRINTS: string;
         SPRINT_DETAILS: string;
+        TASK_DETAILS: string;
     },
     navigate:{
         budgetDetails: string;
         sprintDetails: string;
-
+        taskDetails: string;
     }
 }
 
@@ -27,10 +28,12 @@ export const ROUTES:IRoutePaths = {
         BUDGETS: "budget",
         BUDGET_DETAILS: "budget/:budgetId",
         SPRINTS: "sprints",
-        SPRINT_DETAILS: "sprints/:sprintId"
+        SPRINT_DETAILS: "sprints/:sprintId",
+        TASK_DETAILS: "sprints/:sprintId/task/:taskId"
     },
     navigate: {
         budgetDetails: ":budgetId",
-        sprintDetails: ":sprintId"
+        sprintDetails: ":sprintId",
+        taskDetails: "task/:taskId"
     }
 }

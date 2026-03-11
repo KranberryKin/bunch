@@ -1,0 +1,40 @@
+.calendar-main-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.calender-filter-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.calandar-header{
+  display: flex;
+  flex-direction: row;
+  width: 71vw;
+  justify-content: center;
+  align-items: center;
+}
+.calendar-body{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 71vw;
+  flex-wrap: wrap;
+}
+.calendar-day{
+  width: 10vw;
+  text-align: center;
+  border: 1px solid white;
+}
+.calendar-day-body{
+  width: 10vw;
+  height: 9vh;
+  text-align: center;
+  border: 1px solid white;
+}
+.empty-day{
+  color: grey;
+}

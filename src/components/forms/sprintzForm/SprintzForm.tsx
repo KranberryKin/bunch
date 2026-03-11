@@ -6,6 +6,8 @@ import Button from "../../button/button.tsx";
 import "./sprintsform.css"
 import CustomDatePicker from "../../customdatepicker/CustomDatePicker.tsx";
 import IUser from "../../../constants/interfaces/user.ts";
+import { useNotify } from '../../../contextProvider/notifyContext.tsx'
+
 
 interface ISprintzForm {
     title: string;
@@ -22,6 +24,7 @@ interface ISprintzFormProps {
 
 const SprintzForm = (props: ISprintzFormProps) => {
     const sprintzRepo = new LocalStorageManager<ISprintz>(DataBase_Strings.Sprintz_DB);
+    const { sendNotify } = useNotify();
     const [sprintzForm, setSprintzForm] = useState<ISprintzForm>({
         title: "",
         description: "",
@@ -39,9 +42,11 @@ const SprintzForm = (props: ISprintzFormProps) => {
             !sprintzForm.startDate ||
             !sprintzForm.endDate
         ){
+            sendNotify("Please fill in all required fields.");
             return false;
         }
         if(new Date(sprintzForm.startDate) >= new Date(sprintzForm.endDate)){
+            sendNotify("Start date must be before end date.");
             return false;
         }
         return true;
@@ -64,7 +69,6 @@ const SprintzForm = (props: ISprintzFormProps) => {
                 props.callbackFunction();
             };
         }
-        console.log("handleFormSubmit clicked!");
     }
 
     const clearForm = () => {
@@ -80,8 +84,8 @@ const SprintzForm = (props: ISprintzFormProps) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setSprintzForm({ ...sprintzForm, [name]: value });
-        console.log("sprintzForm: ", sprintzForm);
     }
+    
     return <div className="sprintz-form-main-container">
             <div className="sprintz-form-header">
                 Sprintz Form

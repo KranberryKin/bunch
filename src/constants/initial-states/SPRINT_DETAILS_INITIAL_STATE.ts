@@ -4,7 +4,7 @@ interface ISprintDetailsInitialState {
 }
 
 const SPRINT_DETAILS_INITIAL_STATE: ISprintDetailsInitialState = {
-    Page_Title: "Sprint Details",
+    Page_Title: "Sprintz Details",
     Child_Pages:[
         "Backlog",
         "Current Sprint",

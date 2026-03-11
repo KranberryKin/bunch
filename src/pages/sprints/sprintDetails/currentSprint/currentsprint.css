@@ -1,0 +1,15 @@
+.sprint-details-page-main-container{
+  display: flex;
+  flex-direction: column;
+}
+.sprint-details-page-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+.sprint-details-pages-container{
+  display: flex;
+  flex-direction: row;
+}

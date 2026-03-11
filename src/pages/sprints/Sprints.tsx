@@ -12,6 +12,7 @@ import SprintzForm from "../../components/forms/sprintzForm/SprintzForm.tsx";
 import CustomDatePicker from "../../components/customdatepicker/CustomDatePicker.tsx";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
+import SprintzCascadeService from "../../services/SprintzCascadeService.ts";
 
 interface ISprintsProps {
     currentUser: IUser | undefined;
@@ -20,6 +21,7 @@ interface ISprintsProps {
 const Sprints = ({currentUser}: ISprintsProps) => {
     const initialState =  SPRINTZ_INITIAL_STATE;
     const navigate = useNavigate();
+    const cascadeService = new SprintzCascadeService();
     const sprintzRepo = new LocalStorageManager<ISprintz>(DataBase_Strings.Sprintz_DB);
     const [currentToggleState, setCurrentToggleState] =  useState<IToggleListDisplayState>(initialState.toggleListDisplayState[0]);
     const [sprintz, setSprintz] = useState<ISprintz[]>([]);
@@ -27,8 +29,13 @@ const Sprints = ({currentUser}: ISprintsProps) => {
         body_content: null
     });
 
+    const handleNewSprintz = () => {
+        setState();
+        setModalState({body_content: null})
+    }
+
     const toggleFormModal = () => {
-        setModalState({body_content: <SprintzForm currentUser={currentUser} callbackFunction={() => setModalState({body_content: null})} />});
+        setModalState({body_content: <SprintzForm currentUser={currentUser} callbackFunction={() => handleNewSprintz() } />});
     };
     
     const toggleListDisplay = () => {
@@ -45,15 +52,15 @@ const Sprints = ({currentUser}: ISprintsProps) => {
     };
 
 
-    const deleteSprintz = (sprint: ISprintz) => {
-        if(window.confirm(`Are you sure you want to delete the sprint: "${sprint.title}"? This action cannot be undone.`)){
-            sprintzRepo.deleteData(sprint);
+    const deleteSprintz = (sprintz: ISprintz) => {
+        if(window.confirm(`Are you sure you want to delete the sprint: "${sprintz.title}"? This action cannot be undone.`)){
+            cascadeService.deleteSprintz(sprintz)
+            setState();
         }
         setCurrentToggleState({...currentToggleState});
     };
 
-
-    useEffect(() => {
+    const setState = () => {
         const allSprints = sprintzRepo.get();
         const allUserSprints = allSprints?.filter(sprint => sprint.userId === currentUser?.id) || [];
         if(currentToggleState.label === initialState.toggleListDisplayState[2].label){
@@ -62,6 +69,11 @@ const Sprints = ({currentUser}: ISprintsProps) => {
             const filteredSprints = allUserSprints?.filter(sprint => sprint.isCompleted === currentToggleState.isCompleted) || [];
             setSprintz(filteredSprints);
         }
+    }
+
+
+    useEffect(() => {
+        setState();
     }, [currentToggleState.label, currentToggleState.buttonTitle, currentToggleState.isCompleted, currentUser]);
 
     return <div className="sprints-page-main-container">

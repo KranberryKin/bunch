@@ -1,0 +1,28 @@
+.task-comments-main-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.task-comments-header-container{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.task-comments-comments-container{
+  display: flex;
+  flex-direction: column;
+  padding: 0px 10px 0px 10px;
+}
+
+.task-comments-comment{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.clickable{
+  cursor: pointer;
+}
