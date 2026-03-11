@@ -13,9 +13,16 @@ import BudgetDetails from "../../pages/budgets/budgetdetails/BudgetDetails.tsx";
 import Sprints from "../../pages/sprints/Sprints.tsx";
 import SprintDetails from "../../pages/sprints/sprintDetails/SprintDetails.tsx";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
+import TaskDetails from "../../pages/sprints/sprintDetails/taskdetails/TaskDetails.tsx";
+
+interface IBodyProps {
+  currentUser: IUser | undefined,
+  userSessionManager: SessionDataManager<IUser>,
+  setCurrentUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
+  page_options: IPageContent[]}
 
 
-const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
+const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} : IBodyProps) => {
 
     const navigate = useNavigate();
   
@@ -49,6 +56,7 @@ const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{
                         <Route path={ROUTES.URL.BUDGET_DETAILS} element={<BudgetDetails />} />
                         <Route path={ROUTES.URL.SPRINTS} element={<Sprints currentUser={currentUser} />} />
                         <Route path={ROUTES.URL.SPRINT_DETAILS} element={<SprintDetails currentUser={currentUser} />} />
+                        <Route path={ROUTES.URL.TASK_DETAILS} element={<TaskDetails currentUser={currentUser}/>} />
                         <Route path="/*" element={null} />
                       </Routes>
                       }/>
