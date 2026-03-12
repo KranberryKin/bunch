@@ -20,7 +20,7 @@ const CustomDropdown = (props: ICustomDropdownProps) => {
     return (
         <div className="custom-dropdown-main-container">
             <div>
-                <div className="custom-dropdown-selectable-option blue" onClick={() => setIsSelecting(isSelecting ? false : true)}>{selectedOption}</div>
+                <div className="custom-dropdown-selectable-option green" onClick={() => setIsSelecting(isSelecting ? false : true)}>{selectedOption}</div>
             </div>
             <div className={"custom-dropdown-dropdown-container" + (isSelecting === false ? " hidden" : "")}>
                 <div>
