@@ -1,0 +1,9 @@
+interface ITASK_FORM_INITIAL_STATE{
+    
+}
+
+const TASK_FORM_INITIAL_STATE = {
+
+}
+
+export default TASK_FORM_INITIAL_STATE;

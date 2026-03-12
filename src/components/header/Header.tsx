@@ -18,6 +18,7 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
     }
     const [userTheme, setUserTheme] = useState<IUserThemePref | undefined>(undefined)
     const [theme, setTheme] = useState(userTheme ? userTheme.theme : themes[0]);
+    const [isOptionsInvisible, setisOptionsInvisible] = useState(true);
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme)
@@ -79,6 +80,10 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
         assignUserTheme();
     }
 
+    const handleOptionsDropDown = () => {
+        setisOptionsInvisible(!isOptionsInvisible);
+    }
+
     return (
         <div className="header-container">
             <div>
@@ -102,8 +107,23 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
                     </p>
                     )
                 })}
-                <div title="Toggle Light/Dark Themes" className="options-icon-container" onClick={changeThemes}>
-                ⚙️
+                <div>
+                    <div title="Toggle Light/Dark Themes" className="options-icon-container" onClick={handleOptionsDropDown}>
+                        ⚙️
+                    </div>
+                    <div hidden={isOptionsInvisible} className="editable-options-container">
+                        <div>
+                            <div>
+                                {"Theme"}
+                            </div>
+                            <div className="theme-changing-container">
+                                <div className={`slider ${theme === themes[0] ? 'dark' : 'light'}`} onClick={changeThemes} />
+                                <div>
+                                    {theme === themes[0] ? 'Light' : 'Dark'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
