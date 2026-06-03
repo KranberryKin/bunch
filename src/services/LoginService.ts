@@ -86,7 +86,7 @@ class LoginService {
             
             if(this.doStringsMatch(foundUser.password, userForm.password)){
                 foundUser.password = "";
-                this._userSessionManager.saveSessionData(foundUser, 10);
+                this._userSessionManager.saveSessionData(foundUser, 30);
                 this._setCurrentUser(foundUser);
                 this._navigate("/my_profile");
             }else{
@@ -113,7 +113,7 @@ class LoginService {
             this._UserDataService.add(newUser);
             this._bunchUsers = this._UserDataService.values;
             newUser.password = "";
-            this._userSessionManager.saveSessionData(newUser, 10)
+            this._userSessionManager.saveSessionData(newUser, 30)
             this._setCurrentUser(newUser);
             const profileUrl = page_options.find(page => page.page_name = "Profile")?.page_url;
             if(profileUrl !== undefined){

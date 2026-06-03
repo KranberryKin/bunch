@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="App">
         <Router>
-          <Header setCurrentUser={setCurrentUser} userSessionManager={userSessionManager} currentUser={currentUser} page_options={page_options}/>
+          <Header currentUser={currentUser} page_options={page_options}/>
           <Body currentUser={currentUser} userSessionManager={userSessionManager} setCurrentUser={setCurrentUser} page_options={page_options}/>
           <Footer />
         </Router>

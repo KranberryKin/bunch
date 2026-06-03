@@ -23,19 +23,27 @@ interface IBodyProps {
 
 
 const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} : IBodyProps) => {
-
     const navigate = useNavigate();
+
+    const checkSession = () => {
+        const sessionData = userSessionManager.checkSessionData<IUser>();
+        if(sessionData !== null && currentUser === undefined){
+          setCurrentUser(sessionData);
+          initiateCallback();
+        }else if (sessionData !== null && currentUser !== undefined) {
+          initiateCallback();
+        }else if (sessionData === null && currentUser !== undefined){
+          setCurrentUser(undefined);
+          navigate("/login");
+        }
+    }
+
+    const initiateCallback = () => {
+      setTimeout(() => checkSession(), 1000 * 60 * 15);
+    }
   
     useEffect(() => {
-      if(currentUser === undefined){
-        const sessionData = userSessionManager.checkSessionData<IUser>();
-        if(sessionData != null){
-          setCurrentUser(sessionData)
-        }else{
-          navigate("/login")
-        }
-
-      }
+        checkSession();
     },[currentUser]);
     return (
         <div className="body-content">

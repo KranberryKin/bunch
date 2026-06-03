@@ -8,7 +8,7 @@ import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import SessionDataManager from "../../services/SessionDataManager.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 
-const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
+const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
     const title = "Bunch";
     const navigate = useNavigate();
     const themes: string[] = ["light", "dark"]
