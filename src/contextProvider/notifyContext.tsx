@@ -34,8 +34,6 @@ export const NotifyProvider = ({Children}:{Children:any}) => {
     }
 
     const checkNotifys = () => {
-        console.log("notifys", notifys)
-
         if(!checking){
             setChecking(true);
             let notifyToKeep: INotify[] = [];

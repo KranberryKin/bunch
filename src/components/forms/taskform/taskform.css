@@ -1,0 +1,37 @@
+.task-form-main-container{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+.task-form-header-title{
+    font-size: 16px;
+    font-weight: bold;
+}
+.custom-dropdown-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+.task-form-input-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+.task-form-number-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+.task-form-label{
+    margin-right: 10px;
+    width: 47.25%;
+    text-align: end;
+}
+.task-form-button-container{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 10px;
+}

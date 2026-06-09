@@ -1,0 +1,10 @@
+.budget-form-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.budget-form-buttons{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}

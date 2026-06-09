@@ -1,0 +1,59 @@
+.custom-date-picker-main-container{
+    padding: 10px;
+    text-align: center;
+}
+.custom-date-picker-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.custom-date-picker-calandar-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.date-pickable{
+    cursor: pointer;
+}
+.today{
+    background-color: #d3d3d3;
+}
+.empty-day{
+    color: #ccc;
+}
+.custom-date-picker-day{
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+.custom-date-picker-selected-date-display{
+    cursor: pointer;
+    font-weight: bold;
+}
+.custom-date-picker-calandar-days-container{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+}
+.custom-date-picker-button-container{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.custom-date-picker-calandar-navigation-container{
+    display: flex;
+    padding-top: 10px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.custom-date-picker-calandar-container{
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    justify-content: center;
+}

@@ -1,0 +1,29 @@
+.backlog-page-main-container{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.backlog-page-header{
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.backlog-table-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.selectable{
+    cursor: pointer;
+}
+.filter-container{
+    display: flex;
+    align-items: center;
+}

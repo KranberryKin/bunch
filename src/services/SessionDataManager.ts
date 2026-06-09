@@ -38,7 +38,7 @@ class SessionDataManager<T> {
           };
       
           const currentTime = Date.now();
-          const isSessionValid = currentTime - sessionData.timestamp <= sessionData.expiry;
+          const isSessionValid = (currentTime - sessionData.timestamp) <= sessionData.expiry;
       
           if (!isSessionValid) {
             window.localStorage.removeItem(this._key); // Remove expired session
