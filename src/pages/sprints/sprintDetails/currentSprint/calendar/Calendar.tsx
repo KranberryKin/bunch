@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataBase_Strings } from "../../../../../constants/initial-states/Database.ts";
-import ICurrentSprint from "../../../../../constants/interfaces/icurrentSprint.ts";
+import ICurrentSprint from "../../../../../constants/interfaces/ICurrentSprint.ts";
 import ITask from "../../../../../constants/interfaces/ITask.ts";
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
 import Button from "../../../../../components/button/button.tsx";

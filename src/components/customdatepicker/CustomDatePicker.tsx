@@ -70,7 +70,6 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
 
     const DaysInMonth = (month: number, year: number) => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        console.log("daysInMonth: ", daysInMonth);
         return daysInMonth;
     }
 

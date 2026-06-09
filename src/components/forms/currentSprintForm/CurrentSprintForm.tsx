@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./currentsprintform.css"
 import { useNotify } from "../../../contextProvider/notifyContext.tsx";
 import LocalStorageManager from "../../../services/LocalStorageManager.ts";
-import ICurrentSprint from "../../../constants/interfaces/icurrentSprint";
+import ICurrentSprint from "../../../constants/interfaces/ICurrentSprint";
 import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
 import ISprintz from "../../../constants/interfaces/Sprintz";
 import CustomDatePicker from "../../customdatepicker/CustomDatePicker.tsx";
