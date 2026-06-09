@@ -32,7 +32,7 @@ const HomePage = () => {
                     <li key={"HomePage-" + index}>
                         {str}
                     </li>
-                    <br />
+                    <br key={"HomePage-br-" + index} />
                     </>
                 ))}
             </ul>

@@ -91,7 +91,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
         if(props.Sprintz){
           const newCurrentSprint:ICurrentSprint = {
             id: currentSprintRepo.generateId(),
-            sprintzId: props.Sprintz?.id,
+            sprintzId: props.Sprintz.id,
             name: currentSprintForm.name,
             startDate: new Date(currentSprintForm.startDate),
             endDate: new Date(currentSprintForm.endDate)

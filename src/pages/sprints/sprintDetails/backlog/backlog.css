@@ -23,3 +23,7 @@
 .selectable{
     cursor: pointer;
 }
+.filter-container{
+    display: flex;
+    align-items: center;
+}

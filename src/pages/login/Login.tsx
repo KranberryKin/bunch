@@ -91,7 +91,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
         return (<>
             <label key={key + index} htmlFor={key}>{key.toLocaleLowerCase().replace("_", " ")}</label>
             <input key={key + index + index} name={key} value={userForm[key as keyof IUserForm]} type={key.includes("password") ? "password" : "text"} onChange={(e) => updateForm(e.target.value, e.target.name)}/>
-            <div hidden={validUserForm[key as keyof IValidUserForm] || !creatingUser} style={{color: "red"}}>
+            <div key={key + index + index + index} hidden={validUserForm[key as keyof IValidUserForm] || !creatingUser} style={{color: "red"}}>
                 {userFormKeys[0] == key ?  userErrorMsg: 
                 userFormKeys[1] == key ?  passwordErrorMsg :
                 verifyErrorMsg}
