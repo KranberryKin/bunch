@@ -1,6 +1,5 @@
 import { DataBase_Strings } from "../constants/initial-states/Database.ts";
 import ICurrentSprint from "../constants/interfaces/ICurrentSprint.ts";
-import ICurrentSprintTasks from "../constants/interfaces/ICurrentSprintTaks.ts";
 import ISprintStats from "../constants/interfaces/ISprintStats.ts";
 import ITask from "../constants/interfaces/ITask";
 import ISprintz from "../constants/interfaces/Sprintz.ts";
