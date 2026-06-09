@@ -33,7 +33,8 @@ const TaskForm = (props: ITaskFormProps) => {
         category: TaskCategory.Task,
         assignedToUserId: undefined,
         startDate: undefined,
-        endDate: undefined,
+        projectedEndDate: undefined,
+        completionDate: undefined,
         estimatedStoryPoints: undefined,
         actualStoryPoints: undefined,
     });
@@ -71,7 +72,6 @@ const TaskForm = (props: ITaskFormProps) => {
     }
 
     const handleConfirm = () => {
-        debugger
         if(validateForm()){
             taskLocalStorageManager.add(taskFormData);
             if(props.callbackFunction){
@@ -90,14 +90,15 @@ const TaskForm = (props: ITaskFormProps) => {
             category: TaskCategory.Task,
             assignedToUserId: undefined,
             startDate: undefined,
-            endDate: undefined,
+            projectedEndDate: undefined,
+            completionDate: undefined,
             estimatedStoryPoints: undefined,
             actualStoryPoints: undefined,
         })
     }
 
     const isKeyNeeded = (key: string): boolean => {
-        const notNeededKeys = ["id", "creatorUserId", "sprintzId", "startDate", "endDate", "actualStoryPoints", "assignedToUserId"];
+        const notNeededKeys = ["id", "creatorUserId", "sprintzId", "startDate", "projectedEndDate", "completionDate", "actualStoryPoints", "assignedToUserId"];
         return !notNeededKeys.includes(key);
     }
 

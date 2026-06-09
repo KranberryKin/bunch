@@ -52,7 +52,6 @@ class StatisticsService {
 
       public generateSprintStats = (sprintz: ISprintz | undefined, selectedSprint: ICurrentSprint | null) => {
         try{
-            debugger
             const doesStatExsist = this._statisticsRepo.values.some((stat) => stat.sprintId === selectedSprint?.id);
             if(sprintz && selectedSprint){
                 if(!doesStatExsist){
