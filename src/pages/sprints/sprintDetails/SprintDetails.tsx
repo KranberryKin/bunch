@@ -10,6 +10,7 @@ import ISprintz from "../../../constants/interfaces/Sprintz.ts";
 import IUser from "../../../constants/interfaces/user.ts";
 import LocalStorageManager from "../../../services/LocalStorageManager.ts";
 import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
+import ICurrentSprint from "../../../constants/interfaces/ICurrentSprint.ts";
 
 interface ISprintDetailsProps {
     currentUser: IUser | undefined;  
@@ -20,6 +21,7 @@ const SprintDetails = (props: ISprintDetailsProps) => {
     const sprintsRepository = new LocalStorageManager<ISprintz>(DataBase_Strings.Sprintz_DB);
     const [displayMode, setDisplayMode] = useState<string>("Backlog");
     const [sprintz, setSprintz] = useState<ISprintz | undefined>(undefined);
+    const [selectedSprint, setSelectedSprint] = useState<ICurrentSprint | undefined>(undefined);
     
     const handlePageChange = (page: string) => () => {
         setDisplayMode(page);
@@ -57,13 +59,13 @@ const SprintDetails = (props: ISprintDetailsProps) => {
             </div>
             <div className="sprint-details-page-child-page-container">
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[0] ? "hidden" : ""}>
-                    <Backlog currentUser={props.currentUser} Sprintz={sprintz}/>
+                    <Backlog currentUser={props.currentUser} Sprintz={sprintz} selectedSprint={selectedSprint}  setSelectedSprint={setSelectedSprint} />
                 </div>
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[1] ? "hidden" : ""}>
-                    <CurrentSprint currentSprint={sprintz} />
+                    <CurrentSprint sprintz={sprintz} selectedSprint={selectedSprint} setSelectedSprint={setSelectedSprint} />
                 </div>
                 <div className={displayMode !== SPRINT_DETAILS_INITIAL_STATE.Child_Pages[2] ? "hidden" : ""}>
-                    <Statistics currentSprint={sprintz} />
+                    <Statistics sprintz={sprintz} selectedSprint={selectedSprint} setSelectedSprint={setSelectedSprint} />
                 </div>
             </div>
         </div>

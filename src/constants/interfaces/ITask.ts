@@ -10,7 +10,7 @@ interface ITask {
     title: string;
     description: string;
     startDate?: string;
-    endDate?: string;
+    completionDate?: string;
     status: TaskStatus;
     category: TaskCategory;
     estimatedStoryPoints?: number;

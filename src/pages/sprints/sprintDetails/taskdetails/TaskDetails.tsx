@@ -1,3 +1,4 @@
+import ICurrentSprint from "../../../../constants/interfaces/ICurrentSprint.ts";
 import { useParams } from "react-router-dom";
 import "./taskdetails.css"
 import LocalStorageManager from "../../../../services/LocalStorageManager.ts";
@@ -7,7 +8,6 @@ import { useEffect, useState } from "react";
 import IUser from "../../../../constants/interfaces/user";
 import Button from "../../../../components/button/button.tsx";
 import TaskComments from "./taskcomments/TaskComments.tsx";
-import ICurrentSprint from "../../../../constants/interfaces/icurrentSprint.ts";
 import CustomDropdown from "../../../../components/customDropdown/CustomDropdown.tsx";
 import TaskStatus from "../../../../constants/interfaces/TaskStatus.ts";
 

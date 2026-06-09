@@ -7,7 +7,7 @@ import CurrentSprintForm from "../../../../../components/forms/currentSprintForm
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
 import ITask from "../../../../../constants/interfaces/ITask.ts";
 import { DataBase_Strings } from "../../../../../constants/initial-states/Database.ts";
-import ICurrentSprint from "../../../../../constants/interfaces/icurrentSprint.ts";
+import ICurrentSprint from "../../../../../constants/interfaces/ICurrentSprint.ts";
 import CustomDropdown from "../../../../../components/customDropdown/CustomDropdown.tsx";
 import ISprintz from "../../../../../constants/interfaces/Sprintz.ts";
 import CurrentSprint from "../CurrentSprint.tsx";
@@ -15,15 +15,17 @@ import { useNavigate } from "react-router-dom";
 
 interface CurrentStatusProps {
   Sprintz: ISprintz | undefined
+  selectedSprint: ICurrentSprint | undefined
+  setSelectedSprint: (sprint: ICurrentSprint | undefined) => void
 }
 
 const CurrentStatus = (props: CurrentStatusProps) => {
   const navigate = useNavigate();
+  const {selectedSprint, setSelectedSprint} = props;
     const statusList = Object.keys(TaskStatus);
     const tasksRepo = new LocalStorageManager<ITask>(DataBase_Strings.Tasks_DB);
     const currentSprintRepo = new LocalStorageManager<ICurrentSprint>(DataBase_Strings.Current_Sprints_DB);
     const [isSelectingSprint, setIsSelectingSprint] = useState(false);
-    const [selectedSprint, setSelectedSprint] = useState<ICurrentSprint | undefined>(undefined);
     const [modalContent, setModalContent] = useState<React.ReactNode | undefined>(undefined);
     const [displayedTasks, setDisplayedTaks] = useState<ITask[]>([]);
     const closeModal = () => {

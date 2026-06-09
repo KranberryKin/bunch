@@ -10,13 +10,16 @@ import TaskForm from "../../../../components/forms/taskform/TaskForm.tsx";
 import IUser from "../../../../constants/interfaces/user.ts";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/initial-states/routes.ts";
+import ICurrentSprint from "../../../../constants/interfaces/ICurrentSprint.ts";
 
 interface IBacklogProps {
     currentUser: IUser | undefined;
     Sprintz: ISprintz | undefined;
+    selectedSprint: ICurrentSprint | undefined;
+    setSelectedSprint: (sprint: ICurrentSprint | undefined) => void;
 }
 
-const Backlog = ({Sprintz, currentUser}: IBacklogProps) => {
+const Backlog = ({Sprintz, currentUser, selectedSprint, setSelectedSprint}: IBacklogProps) => {
 
     const tasksRepository = new LocalStorageManager<ITask>(DataBase_Strings.Tasks_DB);
 

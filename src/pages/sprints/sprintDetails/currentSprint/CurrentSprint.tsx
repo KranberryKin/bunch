@@ -4,9 +4,12 @@ import ISprintz from "../../../../constants/interfaces/Sprintz.ts";
 import "./currentsprint.css";
 import CurrentStatus from "./currentStatus/CurrentStatus.tsx";
 import Calendar from "./calendar/Calendar.tsx";
+import ICurrentSprint from "../../../../constants/interfaces/ICurrentSprint.ts";
 
 interface ICurrentSprintProps {
-    currentSprint: ISprintz | undefined;
+    sprintz: ISprintz | undefined;
+    selectedSprint: ICurrentSprint | undefined;
+    setSelectedSprint: (sprint: ICurrentSprint | undefined) => void;
 }
 
 const CurrentSprint = (props: ICurrentSprintProps) => {
@@ -30,7 +33,7 @@ const CurrentSprint = (props: ICurrentSprintProps) => {
                 </div>
             </div>
             <div className="sprint-details-pages-container">
-                {isCurrentStatus ? <CurrentStatus Sprintz={props.currentSprint} /> : <Calendar />}
+                {isCurrentStatus ? <CurrentStatus Sprintz={props.sprintz} selectedSprint={props.selectedSprint} setSelectedSprint={props.setSelectedSprint} /> : <Calendar />}
             </div>
         </div>
     );
