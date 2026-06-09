@@ -5,10 +5,12 @@ import IUser from "../../../constants/interfaces/user.ts";
 import Button from "../../button/button.tsx";
 import LocalStorageManager from "../../../services/LocalStorageManager.ts";
 import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
+import { useNotify } from "../../../contextProvider/notifyContext.tsx";
 
 const BudgetForm = ({currentUser, onConfirm, onCancel}:{currentUser:IUser | undefined, onConfirm: () => any, onCancel:() => any }) => {
 
     const budgetRepository = new LocalStorageManager<IBudget>(DataBase_Strings.Budget_DB);
+    const { sendNotify } = useNotify();
     const [budgetForm, setBudgetForm] = useState<IBudget>({
         id: budgetRepository.generateId(),
         name: "",
@@ -32,7 +34,7 @@ const BudgetForm = ({currentUser, onConfirm, onCancel}:{currentUser:IUser | unde
 
     const submitBudgetForm = () => {
         if(budgetForm.name === ""){
-            alert("Please fill out all fields");
+            sendNotify("Please fill out all fields");
             return;
         }else{
             budgetRepository.add(budgetForm);
