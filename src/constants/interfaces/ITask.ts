@@ -10,6 +10,7 @@ interface ITask {
     title: string;
     description: string;
     startDate?: string;
+    projectedEndDate?: string;
     completionDate?: string;
     status: TaskStatus;
     category: TaskCategory;

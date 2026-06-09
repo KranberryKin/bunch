@@ -9,7 +9,6 @@ import CustomModal from "../../components/custommodal/CustomModal.tsx";
 import IUser from "../../constants/interfaces/user.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import SprintzForm from "../../components/forms/sprintzForm/SprintzForm.tsx";
-import CustomDatePicker from "../../components/customdatepicker/CustomDatePicker.tsx";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
 import SprintzCascadeService from "../../services/SprintzCascadeService.ts";
@@ -61,8 +60,8 @@ const Sprints = ({currentUser}: ISprintsProps) => {
     };
 
     const setState = () => {
-        const allSprints = sprintzRepo.get();
-        const allUserSprints = allSprints?.filter(sprint => sprint.userId === currentUser?.id) || [];
+        sprintzRepo.get();
+        const allUserSprints = sprintzRepo.values?.filter(sprint => sprint.userId === currentUser?.id) || [];
         if(currentToggleState.label === initialState.toggleListDisplayState[2].label){
             setSprintz(allUserSprints);
         }else{

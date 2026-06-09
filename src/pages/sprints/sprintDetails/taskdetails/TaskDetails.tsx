@@ -10,6 +10,7 @@ import Button from "../../../../components/button/button.tsx";
 import TaskComments from "./taskcomments/TaskComments.tsx";
 import CustomDropdown from "../../../../components/customDropdown/CustomDropdown.tsx";
 import TaskStatus from "../../../../constants/interfaces/TaskStatus.ts";
+import CustomDatePicker from "../../../../components/customdatepicker/CustomDatePicker.tsx";
 
 interface ITaskDetailsProps {
   currentUser: IUser | undefined;
@@ -33,8 +34,9 @@ const TaskDetails = (props: ITaskDetailsProps) => {
     assignedUser: false,
     estimatedStoryPoints: false,
     status: false,
+    projectedEndDate: false,
   });
-  
+
   const editDescription = () => {
     if (!isEditing && currentTask) {
       setEditedDescription(currentTask.description);
@@ -82,13 +84,33 @@ const TaskDetails = (props: ITaskDetailsProps) => {
       setState();
     }else if("status" === detail){
       if (currentTask) {
-        const updatedTask = { ...currentTask, status: TaskStatus[value as keyof typeof TaskStatus] };
+        let updatedTask = { ...currentTask, status: TaskStatus[value as keyof typeof TaskStatus] };
+        if(TaskStatus[value as keyof typeof TaskStatus] === TaskStatus.Complete){
+          if(updatedTask?.startDate === undefined){
+            updatedTask = { ...updatedTask, startDate: new Date().toISOString().split('T')[0] };
+          }
+          updatedTask = { ...updatedTask, completionDate: new Date().toISOString().split('T')[0] };
+        }else if (
+          TaskStatus[value as keyof typeof TaskStatus] !== TaskStatus.Idle &&
+          TaskStatus[value as keyof typeof TaskStatus] !== TaskStatus.StandAlone &&
+          TaskStatus[value as keyof typeof TaskStatus] !== TaskStatus.Complete
+          ) {
+          updatedTask = { ...updatedTask, startDate: new Date().toISOString().split('T')[0] };
+        }else{
+          updatedTask = { ...updatedTask, completionDate: undefined , startDate: undefined };
+        }
         taskRepo.updateData(updatedTask);
       }
       setState();
     }else if("estimatedStoryPoints" === detail){
       if (currentTask) {
         const updatedTask = { ...currentTask, estimatedStoryPoints: value };
+        taskRepo.updateData(updatedTask);
+      }
+      setState();
+    } else if("projectedEndDate" === detail){
+      if (currentTask) {
+        const updatedTask = { ...currentTask, projectedEndDate: value };
         taskRepo.updateData(updatedTask);
       }
       setState();
@@ -109,7 +131,8 @@ const TaskDetails = (props: ITaskDetailsProps) => {
       currentSprintId: currentTask?.currentSprintId,
       assignedToUserId: currentTask?.assignedToUserId,
       estimatedStoryPoints: currentTask?.estimatedStoryPoints,
-      status: currentTask?.status
+      status: currentTask?.status,
+      projectedEndDate: currentTask?.projectedEndDate,
     };
     setTaskEditableDetails(newTaskEditableDeatail);
   },[currentTask])
@@ -175,6 +198,14 @@ const TaskDetails = (props: ITaskDetailsProps) => {
             </div>
             <div>
               {isEditingExtraDetails.status ? <CustomDropdown listOptions={taskStatuses}  callback={(selectedOption) => handleEditExtraDetails('status', selectedOption)}/> : <div className="clickable" onClick={() => enableExtraEdits("status")}>{taskEditableDetails?.status ?? "Null"}</div>}
+            </div>
+          </div>
+          <div className="additinal-editable-details">
+            <div>
+              {"Projected End Date"}
+            </div>
+            <div>
+              {isEditingExtraDetails.projectedEndDate ? <CustomDatePicker callbackFunction={(selectedDate) => handleEditExtraDetails('projectedEndDate', selectedDate)} /> : <div className="clickable" onClick={() => enableExtraEdits("projectedEndDate")}>{taskEditableDetails?.projectedEndDate ?? "Null"}</div>}
             </div>
           </div>
         </div>
