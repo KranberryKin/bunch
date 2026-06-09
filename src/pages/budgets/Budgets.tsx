@@ -6,7 +6,7 @@ import LocalStorageManager from "../../services/LocalStorageManager.ts";
 import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../../components/custommodal/CustomModal.tsx";
-import BudgetForm from "../../components/forms/budgetform/BudetForm.tsx";
+import BudgetForm from "../../components/forms/budgetform/BudgetForm.tsx";
 import IBudget from "../../constants/interfaces/budget.ts";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
 
