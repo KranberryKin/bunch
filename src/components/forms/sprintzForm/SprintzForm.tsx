@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LocalStorageManager from "../../../services/LocalStorageManager.ts";
 import ISprintz from "../../../constants/interfaces/Sprintz.ts";
 import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
@@ -20,18 +20,33 @@ interface ISprintzForm {
 interface ISprintzFormProps {
     currentUser: IUser | undefined;
     callbackFunction?: () => void;
+    updateSprintzDetails?: ISprintz;
 }
 
 const SprintzForm = (props: ISprintzFormProps) => {
     const sprintzRepo = new LocalStorageManager<ISprintz>(DataBase_Strings.Sprintz_DB);
     const { sendNotify } = useNotify();
     const [sprintzForm, setSprintzForm] = useState<ISprintzForm>({
-        title: "",
-        description: "",
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date().toISOString().split('T')[0],
-        isCompleted: false,
+        title: props.updateSprintzDetails ? props.updateSprintzDetails.title : "",
+        description: props.updateSprintzDetails ? props.updateSprintzDetails.description : "",
+        startDate: props.updateSprintzDetails ? props.updateSprintzDetails.startDate : new Date().toISOString().split('T')[0],
+        endDate: props.updateSprintzDetails ? props.updateSprintzDetails.endDate :new Date().toISOString().split('T')[0],
+        isCompleted: props.updateSprintzDetails ? props.updateSprintzDetails.isCompleted : false,
     });
+
+    const setState = () => {
+        setSprintzForm({
+        title: props.updateSprintzDetails ? props.updateSprintzDetails.title : "",
+        description: props.updateSprintzDetails ? props.updateSprintzDetails.description : "",
+        startDate: props.updateSprintzDetails ? props.updateSprintzDetails.startDate : new Date().toISOString().split('T')[0],
+        endDate: props.updateSprintzDetails ? props.updateSprintzDetails.endDate :new Date().toISOString().split('T')[0],
+        isCompleted: props.updateSprintzDetails ? props.updateSprintzDetails.isCompleted : false,
+    });
+    }
+
+    useEffect(() => {
+        setState();
+    },[props.updateSprintzDetails])
 
     const validateForm = (): boolean => {
         // Basic validation logic
@@ -55,7 +70,7 @@ const SprintzForm = (props: ISprintzFormProps) => {
     const handleFormSubmit = () => {
         if(validateForm() && props.currentUser){
             const newSprint: ISprintz = {
-                id: sprintzRepo.generateId(),
+                id: props.updateSprintzDetails ? props.updateSprintzDetails.id : sprintzRepo.generateId(),
                 title: sprintzForm.title,
                 startDate: sprintzForm.startDate,
                 endDate: sprintzForm.endDate,
@@ -63,22 +78,20 @@ const SprintzForm = (props: ISprintzFormProps) => {
                 userId: props.currentUser.id,
                 description: sprintzForm.description || "",
             };
-            sprintzRepo.add(newSprint);
-            clearForm();
+            if(props.updateSprintzDetails) {
+                sprintzRepo.updateData(newSprint)
+            }else{
+                sprintzRepo.add(newSprint);
+            }
             if(props.callbackFunction){
                 props.callbackFunction();
             };
+            clearForm();
         }
     }
 
     const clearForm = () => {
-        setSprintzForm({
-            title: "",
-            description: "",
-            startDate: new Date().toISOString().split('T')[0],
-            endDate: new Date().toISOString().split('T')[0],
-            isCompleted: false,
-        });
+        setState();
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +111,7 @@ const SprintzForm = (props: ISprintzFormProps) => {
                             <div key={key} className="sprintz-form-input-item">
                                 <label>{key.charAt(0).toUpperCase() + key.slice(1)} :</label>
                                 <div>
-                                    <CustomDatePicker callbackFunction={(selectedDate: string) => setSprintzForm({ ...sprintzForm, [key]: selectedDate })} />
+                                {props.updateSprintzDetails ? <CustomDatePicker callbackFunction={(selectedDate: string) => setSprintzForm({ ...sprintzForm, [key]: selectedDate })} dateToUpdate={props.updateSprintzDetails[key as keyof ISprintz] as string} /> : <CustomDatePicker callbackFunction={(selectedDate: string) => setSprintzForm({ ...sprintzForm, [key]: selectedDate })} /> }    
                                 </div>
                             </div>
                         </div> :

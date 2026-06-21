@@ -37,10 +37,10 @@ class StatisticsService {
         sprintzId: sprintz.id,
         projectedPoints: totalStoryPoints,
         completedPoints: completedStoryPoints,
-        percentPoints: percentPoints,
+        percentPoints: Math.floor(percentPoints),
         totalTasks: totalTasks,
         completedTasks: completedTasks,
-        percentTasks: percentTasks
+        percentTasks: Math.floor(percentTasks)
     }
     this._statisticsRepo.add(SprintStats);
   }

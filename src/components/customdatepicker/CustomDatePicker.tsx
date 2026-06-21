@@ -4,6 +4,7 @@ import Button from "../button/button.tsx";
 
 interface ICustomDatePickerProps {
     callbackFunction?: (selectedDate: string) => void;
+    dateToUpdate?: string
 }
 
 interface IDatePickerForm {
@@ -19,8 +20,14 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const todaysDate = new Date();
     const [datePickerForm, setDatePickerForm] =  useState<IDatePickerForm>({
-        selectedDate: todaysDate.toISOString().split('T')[0],
+        selectedDate: props.dateToUpdate ? props.dateToUpdate : todaysDate.toISOString().split('T')[0],
     });
+
+    useEffect(() => {
+        setDatePickerForm({
+        selectedDate: props.dateToUpdate ? props.dateToUpdate : todaysDate.toISOString().split('T')[0],
+    })
+    },[props.dateToUpdate])
 
     const [calanderFilter, setCalanderFilter] = useState<ICalanderFilter>({
         selectedYear: todaysDate.getFullYear(),
