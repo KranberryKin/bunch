@@ -1,5 +1,5 @@
-import TaskCategory from "../interfaces/TaskCategory";
-import TaskStatus from "../interfaces/TaskStatus";
+import TaskCategory from "../interfaces/TaskCategory.ts";
+import TaskStatus from "../interfaces/TaskStatus.ts";
 
 interface ITASK_FORM_INITIAL_STATE{
     
