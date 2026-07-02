@@ -10,6 +10,7 @@ import Button from "../../button/button.tsx";
 import LocalStorageManager from "../../../services/LocalStorageManager.ts";
 import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
 import { useNotify } from '../../../contextProvider/notifyContext.tsx'
+import TASK_FORM_INITIAL_STATE from "../../../constants/initial-states/TASK_FORM_INITIAL_STATE.ts";
 
 
 interface ITaskFormProps {
@@ -24,19 +25,10 @@ const TaskForm = (props: ITaskFormProps) => {
     const { sendNotify } = useNotify();
 
     const [taskFormData, setTaskFormData] = useState<ITask>({
+        ...TASK_FORM_INITIAL_STATE.formState,
         id: taskLocalStorageManager.generateId() || 0,
         sprintzId: props.currentSprint ?  props.currentSprint.id : 0,
         creatorUserId: props.currentUser ? props.currentUser.id : 0,
-        title: "",
-        description: "",
-        status: TaskStatus.StandAlone,
-        category: TaskCategory.Task,
-        assignedToUserId: undefined,
-        startDate: undefined,
-        projectedEndDate: undefined,
-        completionDate: undefined,
-        estimatedStoryPoints: undefined,
-        actualStoryPoints: undefined,
     });
 
     const validateForm = ():boolean => {
@@ -81,24 +73,14 @@ const TaskForm = (props: ITaskFormProps) => {
     }
     const handleCancel = () => {
         setTaskFormData({
-            id: 0,
+            ...TASK_FORM_INITIAL_STATE.formState,
             sprintzId: props.currentSprint ?  props.currentSprint.id : 0,
             creatorUserId: props.currentUser ? props.currentUser.id : 0,
-            title: "",
-            description: "",
-            status: TaskStatus.Idle,
-            category: TaskCategory.Task,
-            assignedToUserId: undefined,
-            startDate: undefined,
-            projectedEndDate: undefined,
-            completionDate: undefined,
-            estimatedStoryPoints: undefined,
-            actualStoryPoints: undefined,
         })
     }
 
     const isKeyNeeded = (key: string): boolean => {
-        const notNeededKeys = ["id", "creatorUserId", "sprintzId", "startDate", "projectedEndDate", "completionDate", "actualStoryPoints", "assignedToUserId"];
+        const notNeededKeys = TASK_FORM_INITIAL_STATE.notNeededKeys;
         return !notNeededKeys.includes(key);
     }
 

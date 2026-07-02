@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../../../../../components/button/button.tsx";
 import CustomModal from "../../../../../components/custommodal/CustomModal.tsx";
 import TaskStatus from "../../../../../constants/interfaces/TaskStatus.ts";
+import "../../../../../decalrations.ts"
 import "./currentstatus.css"
 import CurrentSprintForm from "../../../../../components/forms/currentSprintForm/CurrentSprintForm.tsx";
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
