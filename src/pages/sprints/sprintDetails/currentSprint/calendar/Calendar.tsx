@@ -4,6 +4,7 @@ import ICurrentSprint from "../../../../../constants/interfaces/ICurrentSprint.t
 import ITask from "../../../../../constants/interfaces/ITask.ts";
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
 import Button from "../../../../../components/button/button.tsx";
+import "../../../../../decalrations.ts"
 import "./calendar.css"
 import ISprintz from "../../../../../constants/interfaces/Sprintz.ts";
 
