@@ -33,7 +33,7 @@ const CurrentSprint = (props: ICurrentSprintProps) => {
                 </div>
             </div>
             <div className="sprint-details-pages-container">
-                {isCurrentStatus ? <CurrentStatus Sprintz={props.sprintz} selectedSprint={props.selectedSprint} setSelectedSprint={props.setSelectedSprint} /> : <Calendar />}
+                {isCurrentStatus ? <CurrentStatus Sprintz={props.sprintz} selectedSprint={props.selectedSprint} setSelectedSprint={props.setSelectedSprint} /> : <Calendar  Sprintz={props.sprintz} selectedSprint={props.selectedSprint} setSelectedSprint={props.setSelectedSprint} />}
             </div>
         </div>
     );

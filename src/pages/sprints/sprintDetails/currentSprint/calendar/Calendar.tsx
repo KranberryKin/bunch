@@ -5,6 +5,7 @@ import ITask from "../../../../../constants/interfaces/ITask.ts";
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
 import Button from "../../../../../components/button/button.tsx";
 import "./calendar.css"
+import ISprintz from "../../../../../constants/interfaces/Sprintz.ts";
 
 interface IDatePickerForm {
     selectedDate: string;
@@ -15,12 +16,19 @@ interface ICalanderFilter {
     selectedMonth: number;
 }
 
-const Calendar = () => {
+interface ICalandarProps {
+    Sprintz: ISprintz | undefined;
+    selectedSprint: ICurrentSprint | undefined;
+    setSelectedSprint: (sprint: ICurrentSprint | undefined) => void
+}
+
+const Calendar = (props: ICalandarProps) => {
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const monthsOfYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const currentSprintRepo = new LocalStorageManager<ICurrentSprint>(DataBase_Strings.Current_Sprints_DB);
   const tasksRepo = new LocalStorageManager<ITask>(DataBase_Strings.Tasks_DB);
   const todaysDate = new Date();
+  //TODO display number of completed tasks
 
     const [datePickerForm, setDatePickerForm] =  useState<IDatePickerForm>({
         selectedDate: todaysDate.toISOString().split('T')[0],
@@ -38,7 +46,6 @@ const Calendar = () => {
 
     const DaysInMonth = (month: number, year: number) => {
       const daysInMonth = new Date(year, month + 1, 0).getDate();
-      console.log("daysInMonth: ", daysInMonth);
       return daysInMonth;
     }
 
@@ -61,18 +68,17 @@ const Calendar = () => {
     }
 
         const handleCalanderTitleDisplay = (needsUpdate: boolean = false) => {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if(needsUpdate){
             if(calanderTitle.includes("/")){
                 setCalanderTitle(`${calanderFilter.selectedMonth + 1} / ${calanderFilter.selectedYear}`);
             } else {
-                setCalanderTitle(`${monthNames[calanderFilter.selectedMonth]} ${calanderFilter.selectedYear}`);
+                setCalanderTitle(`${monthsOfYear[calanderFilter.selectedMonth]} ${calanderFilter.selectedYear}`);
             }
         }else{
             if(calanderTitle.includes("/")){
-                setCalanderTitle(`${monthNames[calanderFilter.selectedMonth]} ${calanderFilter.selectedYear}`);
-            } else {
                 setCalanderTitle(`${calanderFilter.selectedMonth + 1} / ${calanderFilter.selectedYear}`);
+            } else {
+                setCalanderTitle(`${monthsOfYear[calanderFilter.selectedMonth]} ${calanderFilter.selectedYear}`);
             }
 
         }
@@ -82,6 +88,46 @@ const Calendar = () => {
     return <div className="calandar-header">
         {daysOfWeek.map((day) => (<div className="calendar-day">{day}</div>))}
     </div>;
+    }
+
+    const removeDatesZeros = (str:string) => {
+        let retNum = 0;
+            if(str.charAt(0) === "0"){
+                retNum = JSON.parse(str.slice(1));
+            }else{
+                retNum = JSON.parse(str);
+            }
+            return retNum;
+    }
+
+    const isDayInSprint = (day: number) => {
+        let isIncluded = true;
+
+        if(props.selectedSprint){
+            const sprintsSDdateStrings: string[] = props.selectedSprint.startDate.toString().split("-");
+            const SDYear = JSON.parse(sprintsSDdateStrings[0]);
+            let SDMonth = removeDatesZeros(sprintsSDdateStrings[1]);
+            const SDDay = removeDatesZeros(sprintsSDdateStrings[2]);
+
+            const sprintsEDdateStrings: string[] = props.selectedSprint.endDate.toString().split("-");
+            const EDYear = JSON.parse(sprintsEDdateStrings[0]);
+            let EDMonth = removeDatesZeros(sprintsSDdateStrings[1]);
+            const EDDay = removeDatesZeros(sprintsEDdateStrings[2]);
+
+            const sprintsSD = new Date(SDYear, SDMonth - 1, SDDay, 0, 0, 0, 0);
+            const sprintsED = new Date(EDYear, EDMonth - 1, EDDay, 0, 0, 0, 0);
+            const daysDate = new Date(calanderFilter.selectedYear, calanderFilter.selectedMonth, day, 0, 0, 0, 0);
+            if(daysDate < sprintsSD){
+                isIncluded = false;
+            }
+            if(daysDate > sprintsED){
+                isIncluded = false;
+            }
+        }else{
+            isIncluded = false;
+        }
+
+        return isIncluded;
     }
 
 
@@ -96,7 +142,11 @@ const Calendar = () => {
         }
 
         for (let i = 1; i <= daysInMonth; i++) {
-            dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body"} >{i}</div>);
+            if(isDayInSprint(i)){
+                dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body sprint-day"}>{i}</div>)
+            }else{
+                dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body"}>{i}</div>);
+            }
         }
 
         const totalCells = blankDays + daysInMonth;
