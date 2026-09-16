@@ -41,3 +41,7 @@
 .sprint-day{
   color: #face87;
 }
+.completed_tasks{
+  color: rgb(0, 188, 0);
+  cursor: pointer;
+}

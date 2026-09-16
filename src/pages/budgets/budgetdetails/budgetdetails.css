@@ -18,6 +18,7 @@
     border: 1.5px solid black;
     border-radius: 10px;
     margin: 15px;
+    margin-right: 5vw;
     height: 30vh;
     overflow-y: scroll;
 }
@@ -28,6 +29,7 @@
     border: 1.5px solid black;
     border-radius: 10px;
     margin: 15px;
+    margin-right: 5vw;
     height: 30vh;
     overflow-y: scroll;
 }
@@ -41,4 +43,18 @@
 
 .text-padding{
     padding-left: 10px;
+}
+.income-stream-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.income-stream-details{
+    display: block;
+}
+
+.income-stream-delete {
+    cursor: pointer;
 }

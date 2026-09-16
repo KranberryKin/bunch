@@ -7,6 +7,8 @@ import Button from "../../../../../components/button/button.tsx";
 import "../../../../../decalrations.ts"
 import "./calendar.css"
 import ISprintz from "../../../../../constants/interfaces/Sprintz.ts";
+import CommonFunc from "../../../../../commonFunc.ts";
+
 
 interface IDatePickerForm {
     selectedDate: string;
@@ -28,8 +30,9 @@ const Calendar = (props: ICalandarProps) => {
   const monthsOfYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const currentSprintRepo = new LocalStorageManager<ICurrentSprint>(DataBase_Strings.Current_Sprints_DB);
   const tasksRepo = new LocalStorageManager<ITask>(DataBase_Strings.Tasks_DB);
+  const CommFunc = new CommonFunc();
   const todaysDate = new Date();
-  //TODO display number of completed tasks
+  const [currentSprintTasks, setCurrentSprintTasks] =  useState<ITask[]>([]);
 
     const [datePickerForm, setDatePickerForm] =  useState<IDatePickerForm>({
         selectedDate: todaysDate.toISOString().split('T')[0],
@@ -54,6 +57,10 @@ const Calendar = (props: ICalandarProps) => {
           handleCalanderTitleDisplay(true);
       }, [calanderFilter.selectedMonth, calanderFilter.selectedYear]);
 
+      useEffect(() => {
+        handleCurrentTasksForSprint();
+      }, [props.selectedSprint])
+
       const handlePrevState = () => {
       if(prevState === null){
           setPrevState(datePickerForm.selectedDate);
@@ -66,6 +73,14 @@ const Calendar = (props: ICalandarProps) => {
       const dayString = day.toString().padStart(2, '0');
       const selectedDateString = `${calanderFilter.selectedYear}-${month}-${dayString}`;
       setDatePickerForm({ ...datePickerForm, selectedDate: selectedDateString });
+    }
+
+    const handleCurrentTasksForSprint = () => {
+        tasksRepo.get();
+        if(props.selectedSprint){
+            const currentTasksForSprint = tasksRepo.values.filter(t => t.currentSprintId === props.selectedSprint!.id)
+            setCurrentSprintTasks(currentTasksForSprint);
+        }
     }
 
         const handleCalanderTitleDisplay = (needsUpdate: boolean = false) => {
@@ -101,6 +116,26 @@ const Calendar = (props: ICalandarProps) => {
             return retNum;
     }
 
+    const doesDayHaveCompletedTasks = (day: number) => {
+        let completedTasksForDay = [];
+        const dateToFindTasksBy = new Date(calanderFilter.selectedYear, calanderFilter.selectedMonth, day, 0, 0, 0, 0);
+        for(let i = 0; i < currentSprintTasks.length; i++){
+            if(currentSprintTasks[i].completionDate){
+                const currentTask = currentSprintTasks[i];
+                const CTDateStringSplit = currentTask.completionDate!.split("-");
+                const CTYear = JSON.parse(CTDateStringSplit[0]);
+                const CTMonth = removeDatesZeros(CTDateStringSplit[1]);
+                const CTDay = removeDatesZeros(CTDateStringSplit[2]);
+                const CTCompletedDate = new Date(CTYear, CTMonth - 1, CTDay, 0, 0, 0, 0);
+                if(CommFunc.doStringsMatch(CTCompletedDate.toISOString().split("T")[0], dateToFindTasksBy.toISOString().split("T")[0])){
+                    completedTasksForDay.push(currentSprintTasks[i]);
+                }
+            }
+        }
+
+        return completedTasksForDay;
+    }
+
     const isDayInSprint = (day: number) => {
         let isIncluded = true;
 
@@ -131,6 +166,18 @@ const Calendar = (props: ICalandarProps) => {
         return isIncluded;
     }
 
+    const getTasksTitleString = (taskTitles: string[]) => {
+        let titleString = `Completed Tasks:`;
+        for(let i = 0; i < taskTitles.length; i++){
+            if(titleString.length < 0){
+                titleString = taskTitles[i];
+            }else {
+                titleString += `\n ${taskTitles[i]}`;
+            }
+        }
+        return titleString;
+    }
+
 
       const generateCalanderDays = () => {
         const daysInMonth = DaysInMonth(calanderFilter.selectedMonth, calanderFilter.selectedYear);
@@ -144,7 +191,19 @@ const Calendar = (props: ICalandarProps) => {
 
         for (let i = 1; i <= daysInMonth; i++) {
             if(isDayInSprint(i)){
-                dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body sprint-day"}>{i}</div>)
+                const completedTasksForDay = doesDayHaveCompletedTasks(i)
+                if(completedTasksForDay.length > 0){
+                    dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body sprint-day"}>
+                            <div>
+                                {i}
+                            </div>
+                            <div>
+                                <p className="completed_tasks" title={getTasksTitleString(completedTasksForDay.map(t => t.title))}>{completedTasksForDay.length}</p>
+                            </div>
+                        </div>)
+                }else{
+                    dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body sprint-day"}>{i}</div>)
+                }
             }else{
                 dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"calendar-day-body"}>{i}</div>);
             }
@@ -192,6 +251,7 @@ const Calendar = (props: ICalandarProps) => {
         <Button buttonLabel={"<"} clicked={handleCanlanderNavigation("prev")} />
         <span onClick={() => handleCalanderTitleDisplay()}>{calanderTitle || `${calanderFilter.selectedMonth + 1} / ${calanderFilter.selectedYear}`}</span>
         <Button buttonLabel={">"} clicked={handleCanlanderNavigation("next")} />
+        <Button buttonLabel={"Refresh"} clicked={handleCurrentTasksForSprint} />
     </div>
     {generateCalanderHeader()}
     <div className="calendar-body">

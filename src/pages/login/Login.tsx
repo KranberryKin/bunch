@@ -10,6 +10,7 @@ import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 import { useNotify } from "../../contextProvider/notifyContext.tsx";
 import { ROUTES } from "../../constants/initial-states/routes.ts";
 import LoginService from "../../services/LoginService.ts";
+import CommonFunc from "../../commonFunc.ts";
 
 export interface IUserForm {
     userName:string;
@@ -31,7 +32,7 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
     const userErrorMsg: string = "Username must be longer than 4 letters.";
     const passwordErrorMsg: string ="Password must be longer than 4 letters.";
     const verifyErrorMsg: string ="Passwords must match.";
-
+    const commonFunc = new CommonFunc();
     const [validUserForm, setValidUserForm] = useState<IValidUserForm>({
         userName: true, 
         password: true, 
@@ -88,15 +89,15 @@ const Login = ({currentUser, setCurrentUser, userSessionManager,page_options} : 
 
     
     const LabelInput = (key:string, index:number) => {
-        return (<>
-            <label key={key + index} htmlFor={key}>{key.toLocaleLowerCase().replace("_", " ")}</label>
+        return (<div key={key + index} className="form-child-container">
+            <label htmlFor={key}>{ commonFunc.styleAndReturnString(key) }</label>
             <input key={key + index + index} name={key} value={userForm[key as keyof IUserForm]} type={key.includes("password") ? "password" : "text"} onChange={(e) => updateForm(e.target.value, e.target.name)}/>
             <div key={key + index + index + index} hidden={validUserForm[key as keyof IValidUserForm] || !creatingUser} style={{color: "red"}}>
                 {userFormKeys[0] == key ?  userErrorMsg: 
                 userFormKeys[1] == key ?  passwordErrorMsg :
                 verifyErrorMsg}
                 </div>
-            </>)
+            </div>)
     }
     
     const title = 'Please create an Account or Login'

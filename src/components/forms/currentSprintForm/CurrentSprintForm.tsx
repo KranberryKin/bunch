@@ -33,7 +33,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
   const formDetails = Object.keys(currentSprintForm);
   const { sendNotify } = useNotify();
 
-  const validateForm = () => {
+  const validateForm = (isUpdate:boolean = false) => {
     let isValid = true;
 
     if(currentSprintForm.name.length < 3 || currentSprintForm.name === "") {
@@ -73,7 +73,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
       }
     }
 
-    if(currentSprintRepo.values.filter(s => s.name === currentSprintForm.name).length > 0) {
+    if(!isUpdate && currentSprintRepo.values.filter(s => s.name === currentSprintForm.name).length > 0) {
       sendNotify("A sprint with this name already exists.");
       isValid = false;
     }
@@ -88,7 +88,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
 
   const handleFormButtonClicked = (whichButton: "Submit" | "Clear") => {
     if(whichButton === "Submit"){
-      if(validateForm()){
+      if(validateForm(props.currentSprintToUpdate !== undefined)){
         if(props.Sprintz){
           const newCurrentSprint:ICurrentSprint = {
             id: props.currentSprintToUpdate ? props.currentSprintToUpdate.id : currentSprintRepo.generateId(),
@@ -97,7 +97,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
             startDate: new Date(currentSprintForm.startDate).toISOString().split('T')[0],
             endDate: new Date(currentSprintForm.endDate).toISOString().split('T')[0],
           }
-          if(props.currentSprintToUpdate){
+          if(props.currentSprintToUpdate?.id){
             currentSprintRepo.updateData(newCurrentSprint)
           }else{
             currentSprintRepo.add(newCurrentSprint);

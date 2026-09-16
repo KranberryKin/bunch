@@ -22,25 +22,41 @@ const BudgetDetails = () => {
     const setForm = (content: string) => {
         setCustomModalContent({body_content:undefined});
         if(content === "IncomeStreamForm"){
-            setCustomModalContent({body_content: <IncomeStreamForm budgetId={Number(params.budgetId)} />});
+            setCustomModalContent({body_content: <IncomeStreamForm callbackFunc={() => updateState()} budgetId={Number(params.budgetId)} />});
         }else if(content === "BillsForm"){
             setCustomModalContent({body_content: <BillsForm />});
         }
     };
 
-    useEffect(() => {
-        const updatedBudget = budgetRepo.values.find(b => b.id === Number(params.budgetId));
-        const incomeStreams = incomeStreamRepo.values.filter(i => i.buget_id === Number(params.budgetId));
+    const updateState = () => {
+        budgetRepo.get();
+        incomeStreamRepo.get();
+        billsRepo.get();
+        let updatedBudget = budgetRepo.values.find(b => b.id === Number(params.budgetId));
+        const incomeStreams = incomeStreamRepo.values.filter(i => i.budget_id === Number(params.budgetId));
         const bills = billsRepo.values.filter(b => b.budget_id === Number(params.budgetId));
         if(updatedBudget){
             updatedBudget.income_stream = incomeStreams;
             updatedBudget.bills = bills;
         }
         setBudgetDetails(updatedBudget);
+        setCustomModalContent({body_content: undefined});
+    }
+
+
+    useEffect(() => {
+        updateState();
     }, [params.budgetId]);
 
 
     
+
+    const handleDeleteIncomeStream = (incomeStream: IIncomeStream) => {
+        if(window.confirm("Are you sure you want to delete this income stream?")){
+            incomeStreamRepo.deleteData(incomeStream);
+            updateState();
+        }
+    };
 
     return <div className="budget-details-main-container">
             <CustomModal body_content={customModalContent.body_content} />
@@ -56,9 +72,14 @@ const BudgetDetails = () => {
                 </div>
                 <div>
                     {budgetDetails?.income_stream.map((income, index) => (
-                        <div key={`income-${index}`}>
-                            <span>{income.pay}: </span>
-                            <span>${income.income_stream}</span>
+                        <div className="income-stream-item" key={`income-${index}`}>
+                            <div className="income-stream-details">
+                                <span>${income?.hourly_amount || income?.salary_amount}: </span>
+                                <span>{income.income_stream}</span>
+                            </div>
+                            <div onClick={() => handleDeleteIncomeStream(income)} className="income-stream-delete">
+                                🗑️
+                            </div>
                         </div>
                     ))}
                 </div>

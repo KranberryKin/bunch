@@ -6,6 +6,7 @@ import LocalStorageManager from "./LocalStorageManager.ts";
 import { ROUTES } from "../constants/initial-states/routes.ts";
 import { IPageContent } from "../constants/interfaces/page.ts";
 import { Dispatch, SetStateAction } from "react";
+import CommonFunc from "../commonFunc.ts";
 
 class LoginService {
     private _sendNotify: any;
@@ -15,6 +16,7 @@ class LoginService {
     private _UserDataService: LocalStorageManager<IUser>;
     private _setCurrentUser: React.Dispatch<React.SetStateAction<IUser | undefined>>;
     private _userSessionManager: SessionDataManager<IUser>
+    private _commFunc: CommonFunc;
 
     constructor(
             sendNotify: any,
@@ -32,27 +34,12 @@ class LoginService {
         this._UserDataService = UserDataService;
         this._setCurrentUser = setCurrentUser;
         this._userSessionManager = userSessionManager;
+        this._commFunc = new CommonFunc();
     }
-
-    public doStringsMatch = (s1:string, s2:string) => {
-        let isValid = true;
-        if(s1.length !== s2.length){
-            isValid = false;
-        }else{
-            for(let i = 0; i < s1.length; i++){
-                let s1char = s1[i];
-                let s2char = s2[i];
-                if(s1char !== s2char){
-                    isValid = false;
-                }
-            }
-        }
-        return isValid;
-    }
-
+    
     public validateForm = (userForm:IUserForm, validUserForm: IValidUserForm, setValidUserForm: React.Dispatch<React.SetStateAction<IValidUserForm>>) => {
         let isValid = true;
-        if(!this.doStringsMatch(userForm.password, userForm.verify_password) || userForm.password.length < 5){
+        if(this._commFunc.doStringsMatch(userForm.password, userForm.verify_password)|| userForm.password.length < 5){
             setValidUserForm({...validUserForm, password: false, verify_password: false});
             isValid = false;
         }else{
@@ -84,7 +71,7 @@ class LoginService {
                 return;
             }
             
-            if(this.doStringsMatch(foundUser.password, userForm.password)){
+            if(this._commFunc.doStringsMatch(foundUser.password, userForm.password)){
                 foundUser.password = "";
                 this._userSessionManager.saveSessionData(foundUser, 30);
                 this._setCurrentUser(foundUser);
