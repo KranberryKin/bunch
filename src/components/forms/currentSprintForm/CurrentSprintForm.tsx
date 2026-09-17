@@ -17,7 +17,8 @@ interface ISprintForm{
 
 interface ICurrentSprintFormProps {
   Sprintz: ISprintz | undefined;
-  callbackFunc?: () => void;
+  callbackFunc?: (currentSprintName?: string) => any;
+  currentSprintToUpdate?: ICurrentSprint;
 }
 
 
@@ -25,14 +26,14 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
 
   const currentSprintRepo = new LocalStorageManager<ICurrentSprint>(DataBase_Strings.Current_Sprints_DB);
   const [currentSprintForm, setCurrentSprintForm] = useState<ISprintForm>({
-    name: "",
-    startDate: "",
-    endDate: ""
+    name: props.currentSprintToUpdate ? props.currentSprintToUpdate.name : "",
+    startDate:  props.currentSprintToUpdate ? new Date(props.currentSprintToUpdate.startDate).toISOString().split('T')[0] : "",
+    endDate:  props.currentSprintToUpdate ? new Date(props.currentSprintToUpdate.endDate).toISOString().split('T')[0] : ""
   });
   const formDetails = Object.keys(currentSprintForm);
   const { sendNotify } = useNotify();
 
-  const validateForm = () => {
+  const validateForm = (isUpdate:boolean = false) => {
     let isValid = true;
 
     if(currentSprintForm.name.length < 3 || currentSprintForm.name === "") {
@@ -72,7 +73,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
       }
     }
 
-    if(currentSprintRepo.values.filter(s => s.name === currentSprintForm.name).length > 0) {
+    if(!isUpdate && currentSprintRepo.values.filter(s => s.name === currentSprintForm.name).length > 0) {
       sendNotify("A sprint with this name already exists.");
       isValid = false;
     }
@@ -87,18 +88,26 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
 
   const handleFormButtonClicked = (whichButton: "Submit" | "Clear") => {
     if(whichButton === "Submit"){
-      if(validateForm()){
+      if(validateForm(props.currentSprintToUpdate !== undefined)){
         if(props.Sprintz){
           const newCurrentSprint:ICurrentSprint = {
-            id: currentSprintRepo.generateId(),
+            id: props.currentSprintToUpdate ? props.currentSprintToUpdate.id : currentSprintRepo.generateId(),
             sprintzId: props.Sprintz.id,
             name: currentSprintForm.name,
-            startDate: new Date(currentSprintForm.startDate),
-            endDate: new Date(currentSprintForm.endDate)
+            startDate: new Date(currentSprintForm.startDate).toISOString().split('T')[0],
+            endDate: new Date(currentSprintForm.endDate).toISOString().split('T')[0],
           }
-          currentSprintRepo.add(newCurrentSprint);
+          if(props.currentSprintToUpdate?.id){
+            currentSprintRepo.updateData(newCurrentSprint)
+          }else{
+            currentSprintRepo.add(newCurrentSprint);
+          }
           if(props.callbackFunc) {
-            props.callbackFunc();
+            if(props.currentSprintToUpdate){
+              props.callbackFunc(newCurrentSprint.name);
+            }else{
+              props.callbackFunc();
+            }
           }
         }
       }
@@ -123,7 +132,7 @@ const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
       {formDetails.map((formDetails, index) => (
         <div key={formDetails + index}>
           {formDetails.includes("Date") ?
-            <div> {formDetails + " : "}<CustomDatePicker callbackFunction={(selectedDate) => handleDatePicked(formDetails, selectedDate)}/></div> 
+            <div> {formDetails + " : "} {props.currentSprintToUpdate ? <CustomDatePicker dateToUpdate={new Date(props.currentSprintToUpdate[formDetails as keyof ICurrentSprint]).toISOString().split('T')[0]} callbackFunction={(selectedDate) => handleDatePicked(formDetails, selectedDate)}/> : <CustomDatePicker callbackFunction={(selectedDate) => handleDatePicked(formDetails, selectedDate)}/>}</div> 
             : <div>{formDetails + " : "}<input type="text" value={currentSprintForm[formDetails as keyof ISprintForm]} onChange={(e) => setCurrentSprintForm({ ...currentSprintForm, [formDetails]: e.target.value })} /></div>}
         </div>
       ))}

@@ -4,6 +4,7 @@ import Button from "../button/button.tsx";
 
 interface ICustomDatePickerProps {
     callbackFunction?: (selectedDate: string) => void;
+    dateToUpdate?: string
 }
 
 interface IDatePickerForm {
@@ -19,8 +20,14 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const todaysDate = new Date();
     const [datePickerForm, setDatePickerForm] =  useState<IDatePickerForm>({
-        selectedDate: todaysDate.toISOString().split('T')[0],
+        selectedDate: props.dateToUpdate ? props.dateToUpdate : todaysDate.toISOString().split('T')[0],
     });
+
+    useEffect(() => {
+        setDatePickerForm({
+        selectedDate: props.dateToUpdate ? props.dateToUpdate : todaysDate.toISOString().split('T')[0],
+    })
+    },[props.dateToUpdate])
 
     const [calanderFilter, setCalanderFilter] = useState<ICalanderFilter>({
         selectedYear: todaysDate.getFullYear(),
@@ -75,7 +82,7 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
 
     const generateCalanderHeader = () => {
         return <div className="custom-date-picker-calandar-header">
-            {days.map((day) => (<div className="custom-date-picker-day">{day}</div>))}
+            {days.map((day, index) => (<div key={"day" + index} className="custom-date-picker-day">{day}</div>))}
         </div>;
     }
 
@@ -99,17 +106,17 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
         const firstDayOfMonth = new Date(calanderFilter.selectedYear, calanderFilter.selectedMonth, 1).getDay();
         const blankDays = days.findIndex(day => day === days[firstDayOfMonth]) || 0;
         for (let i = 0; i < blankDays; i++) {
-            dayElements.push(<div className="custom-date-picker-day empty-day">{daysInPrevMonth - blankDays + i + 1}</div>);
+            dayElements.push(<div key={"blank-early-day" + i} className="custom-date-picker-day empty-day">{daysInPrevMonth - blankDays + i + 1}</div>);
         }
 
         for (let i = 1; i <= daysInMonth; i++) {
-            dayElements.push(<div onClick={handleChangeSelectedDate(i)} className={"custom-date-picker-day date-pickable " + (i === parseInt(datePickerForm.selectedDate.split('-')[2]) && calanderFilter.selectedMonth === parseInt(datePickerForm.selectedDate.split('-')[1]) - 1 && calanderFilter.selectedYear === parseInt(datePickerForm.selectedDate.split('-')[0]) ? "today" : "")} >{i}</div>);
+            dayElements.push(<div key={"selectable-day" + i} onClick={handleChangeSelectedDate(i)} className={"custom-date-picker-day date-pickable " + (i === parseInt(datePickerForm.selectedDate.split('-')[2]) && calanderFilter.selectedMonth === parseInt(datePickerForm.selectedDate.split('-')[1]) - 1 && calanderFilter.selectedYear === parseInt(datePickerForm.selectedDate.split('-')[0]) ? "today" : "")} >{i}</div>);
         }
 
         const totalCells = blankDays + daysInMonth;
         const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
         for (let i = 1; i <= remainingCells; i++) {
-            dayElements.push(<div className="custom-date-picker-day empty-day">{i}</div>);
+            dayElements.push(<div key={"blank-late-day" + i} className="custom-date-picker-day empty-day">{i}</div>);
         }
         return dayElements;
     }
@@ -153,7 +160,7 @@ const CustomDatePicker = (props: ICustomDatePickerProps) => {
         <div hidden={isHidden} className="custom-date-picker-calandar-container">
             <div className="custom-date-picker-calandar-navigation-container">
                 <Button buttonLabel={"<"} clicked={handleCanlanderNavigation("prev")} />
-                <span onClick={() => handleCalanderTitleDisplay()}>{calanderTitle || `${calanderFilter.selectedMonth + 1} / ${calanderFilter.selectedYear}`}</span>
+                <div onClick={() => handleCalanderTitleDisplay()}>{calanderTitle || `${calanderFilter.selectedMonth + 1} / ${calanderFilter.selectedYear}`}</div>
                 <Button buttonLabel={">"} clicked={handleCanlanderNavigation("next")} />
             </div>
             {generateCalanderHeader()}

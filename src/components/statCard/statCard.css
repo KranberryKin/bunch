@@ -1,0 +1,24 @@
+.stat-card-container{
+  display: flex;
+  flex-direction: column;
+  width: 15vw;
+  height: 15vh;
+  border: 1px solid var(--text-color);
+  margin: 10px;
+  border-radius: 15px;
+}
+.stat-card-title{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid var(--text-color);
+  height: 30%;
+}
+.stat-card-value{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+}

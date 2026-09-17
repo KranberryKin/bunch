@@ -42,7 +42,7 @@ const Backlog = ({Sprintz, currentUser, selectedSprint, setSelectedSprint}: IBac
 
     const setState = () => {
         if(currentUser && Sprintz){
-            setSprintzTasks(tasksRepository.values.filter(task => task.sprintzId === Sprintz.id));
+            handleOptionSelection(selectedFilter)
         }
     }
 
@@ -66,7 +66,7 @@ const Backlog = ({Sprintz, currentUser, selectedSprint, setSelectedSprint}: IBac
     const handleTaskAdded = () => {
         if(currentUser && Sprintz){
             tasksRepository.get();
-            setSprintzTasks(tasksRepository.values.filter(task => task.sprintzId === Sprintz.id))
+            handleOptionSelection(selectedFilter);
         }
         setModalContent({body: null})
     }
@@ -114,7 +114,10 @@ const Backlog = ({Sprintz, currentUser, selectedSprint, setSelectedSprint}: IBac
                 }
                 break;
             }
-            setIsSelectingFilter(!isSelectingFilter);
+            
+            if(isSelectingFilter){
+                setIsSelectingFilter(!isSelectingFilter);
+            }
     }
 
     return (

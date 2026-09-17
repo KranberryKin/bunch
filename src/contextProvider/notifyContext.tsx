@@ -60,8 +60,8 @@ export const NotifyProvider = ({Children}:{Children:any}) => {
 
     return(<NotifyContext.Provider value={{sendNotify}}>
         <div className="notify">
-        {notifys.length === 0 ? null : notifys.map((notify) => {
-            return(<Notify message={notify.message}/>);
+        {notifys.length === 0 ? null : notifys.map((notify, index) => {
+            return(<Notify key={"notify" + index} message={notify.message}/>);
         })}
 
         </div>

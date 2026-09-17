@@ -29,3 +29,10 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.statistics-stats-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}

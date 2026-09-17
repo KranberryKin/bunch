@@ -1,5 +1,5 @@
 enum IncomeStream {
-    Hourly,
-    Salary
+    Hourly  = "Hourly",
+    Salary = "Salary"
 }
 export default IncomeStream;

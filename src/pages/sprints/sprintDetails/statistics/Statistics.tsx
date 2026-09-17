@@ -9,6 +9,7 @@ import CustomDropdown from "../../../../components/customDropdown/CustomDropdown
 import ICurrentSprint from "../../../../constants/interfaces/ICurrentSprint.ts";
 import Button from "../../../../components/button/button.tsx";
 import StatisticsService from "../../../../services/StatisticsService.ts";
+import StatCard from "../../../../components/statCard/statCard.tsx";
 
 interface IStatisticsProps {
     sprintz: ISprintz | undefined;
@@ -87,17 +88,13 @@ const Statistics = (props: IStatisticsProps) => {
                     { selectedSprint && <Button buttonLabel={"Generate Stats"} clicked={() => generateStats()} /> }
                 </div>
                 {!statistics ? <div>No Stats to display.</div> : (
-                    <div>
-                        <div>
-                            <p>Total Tasks: {statistics.totalTasks}</p>
-                            <p>Completed Tasks: {statistics.completedTasks}</p>
-                            <p>Completion Percentage: {statistics.percentTasks}%</p>
-                        </div>
-                        <div>
-                            <p>Projected Points: {statistics.projectedPoints}</p>
-                            <p>Actual Points: {statistics.completedPoints}</p>
-                            <p>Points Completion Percentage: {statistics.percentPoints}%</p>
-                        </div>
+                    <div className="statistics-stats-container">
+                        <StatCard name={"Total Tasks: "} value={statistics.totalTasks}  />
+                        <StatCard name={"Completed Tasks: "} value={statistics.completedTasks} />
+                        <StatCard name={"Completion Percentage: "} value={statistics.percentTasks.toString() + "%"} />
+                        <StatCard name={"Projected Points: "} value={statistics.projectedPoints} />
+                        <StatCard name={"Actual Points: "} value={statistics.completedPoints} />
+                        <StatCard name={"Points Completion Percentage: "} value={statistics.percentPoints.toString() + "%"} />
                     </div>
                 )}
                 

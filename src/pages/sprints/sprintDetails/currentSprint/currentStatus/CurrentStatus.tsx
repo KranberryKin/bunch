@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../../../../../components/button/button.tsx";
 import CustomModal from "../../../../../components/custommodal/CustomModal.tsx";
 import TaskStatus from "../../../../../constants/interfaces/TaskStatus.ts";
+import "../../../../../decalrations.ts"
 import "./currentstatus.css"
 import CurrentSprintForm from "../../../../../components/forms/currentSprintForm/CurrentSprintForm.tsx";
 import LocalStorageManager from "../../../../../services/LocalStorageManager.ts";
@@ -28,8 +29,13 @@ const CurrentStatus = (props: CurrentStatusProps) => {
     const [isSelectingSprint, setIsSelectingSprint] = useState(false);
     const [modalContent, setModalContent] = useState<React.ReactNode | undefined>(undefined);
     const [displayedTasks, setDisplayedTaks] = useState<ITask[]>([]);
-    const closeModal = () => {
+
+    const closeModal = (sprintSelected?: string) => {
       setModalContent(undefined)
+      if(sprintSelected){
+        handleSelectSprint(sprintSelected);
+      }
+
     }
 
     const handleAddSprint = () => {
@@ -37,10 +43,17 @@ const CurrentStatus = (props: CurrentStatusProps) => {
     };
     
     const handleSelectSprint = (selectedOption: string) => {
+      currentSprintRepo.get();
       const foundSprint = currentSprintRepo.values.find(s => s.name === selectedOption);
       setSelectedSprint(foundSprint);
-      setIsSelectingSprint(!isSelectingSprint);
+      if(isSelectingSprint){
+        setIsSelectingSprint(!isSelectingSprint);
+      }
     };
+
+    const editSprint = () => {
+      setModalContent(<CurrentSprintForm Sprintz={props.Sprintz} callbackFunc={(currentSprintName) => closeModal(currentSprintName)} currentSprintToUpdate={selectedSprint} />)
+    }
 
     const deleteSprint = () => {
       if(window.confirm(`Are you sure you want to Delete Sprint ${selectedSprint?.name}? This cannot be undone.`)){
@@ -55,10 +68,14 @@ const CurrentStatus = (props: CurrentStatusProps) => {
       navigate(`task/${task.id}`);
     }
 
-    useEffect(() => {
+    const setState =() => {
       if(selectedSprint){
         setDisplayedTaks(tasksRepo.values.filter(task => task.currentSprintId === selectedSprint.id));
       }
+    }
+
+    useEffect(() => {
+      setState();
     },[selectedSprint])
 
   return <div className="current-status-main-container">
@@ -76,7 +93,8 @@ const CurrentStatus = (props: CurrentStatusProps) => {
         </div>
       </div>
       <div className="current-status-button-container">
-        {selectedSprint && <div className="clickable spacing" onClick={deleteSprint}>🗑️</div>}
+        {selectedSprint && <div title="Edit" className="clickable spacing" onClick={editSprint}>✏️</div>}
+        {selectedSprint && <div title="Delete" className="clickable spacing" onClick={deleteSprint}>🗑️</div>}
         <Button buttonLabel={"Add Current Sprint"} clicked={handleAddSprint} />
       </div>
     </div>

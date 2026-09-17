@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./custommodal.css";
-import Button from "../button/button";
 
 export interface ICustomModalProps {
     header_content?: React.ReactNode;
     body_content?: React.ReactNode;
     footer_content?: React.ReactNode;
-
+    callback_function?: () => any;
 }
 
 
-const CustomModal = ({header_content, body_content, footer_content}:ICustomModalProps) => {
+const CustomModal = ({header_content, body_content, footer_content, callback_function}:ICustomModalProps) => {
     
     const [isClosed, setIsClosed] = useState<boolean>(true);
 
     const closeModal = () => {
-        setIsClosed(true);
+        if(callback_function){
+            callback_function();
+        }
+            setIsClosed(true);
     }
 
     const defaultHeader: React.ReactNode = <div className="custom-modal-header" onClick={() => closeModal()}>X</div>;
