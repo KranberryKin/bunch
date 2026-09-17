@@ -1,0 +1,38 @@
+.sprint-details-page-main-container{
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.sprint-details-page-header-container{
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.sprint-details-page-header-buttons-container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.sprint-details-page-child-page-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.selected{
+    background-color: var(--bg3-color);
+    color: white;
+}
+.hidden{
+    display: none;
+}
+
+.title-styles{
+    border-bottom: 1px solid var(--text-color);
+}

@@ -1,0 +1,19 @@
+.income-stream-form-main-container{
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+.income-stream-form-main-container{
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+.income-stream-button-container{
+    display: flex;
+}
+.income-stream-parent-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 20vh;
+}

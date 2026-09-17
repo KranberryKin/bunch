@@ -8,40 +8,63 @@ import SessionDataManager from "../../services/SessionDataManager.ts";
 import { IPageContent } from "../../constants/interfaces/page.ts";
 import BunchApp from "../../pages/bunch/bunchApp.tsx";
 import { NotifyProvider } from "../../contextProvider/notifyContext.tsx";
-import Budget from "../../pages/budget/Budget.tsx";
+import Budgets from "../../pages/budgets/Budgets.tsx";
+import BudgetDetails from "../../pages/budgets/budgetdetails/BudgetDetails.tsx";
+import Sprints from "../../pages/sprints/Sprints.tsx";
+import SprintDetails from "../../pages/sprints/sprintDetails/SprintDetails.tsx";
+import { ROUTES } from "../../constants/initial-states/routes.ts";
+import TaskDetails from "../../pages/sprints/sprintDetails/taskdetails/TaskDetails.tsx";
+
+interface IBodyProps {
+  currentUser: IUser | undefined,
+  userSessionManager: SessionDataManager<IUser>,
+  setCurrentUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
+  page_options: IPageContent[]}
 
 
-const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} :{currentUser: IUser | undefined, userSessionManager: SessionDataManager<IUser>, setCurrentUser: (s:IUser | undefined) => void, page_options: IPageContent[]}) => {
-
+const Body = ({currentUser, userSessionManager, setCurrentUser, page_options} : IBodyProps) => {
     const navigate = useNavigate();
+
+    const checkSession = () => {
+        const sessionData = userSessionManager.checkSessionData<IUser>();
+        if(sessionData !== null && currentUser === undefined){
+          setCurrentUser(sessionData);
+          initiateCallback();
+        }else if (sessionData !== null && currentUser !== undefined) {
+          initiateCallback();
+        }else if (sessionData === null && currentUser !== undefined){
+          setCurrentUser(undefined);
+          navigate("/login");
+        }
+    }
+
+    const initiateCallback = () => {
+      setTimeout(() => checkSession(), 1000 * 60 * 15);
+    }
   
     useEffect(() => {
-      if(currentUser === undefined){
-        const sessionData = userSessionManager.checkSessionData<IUser>();
-        if(sessionData != null){
-          setCurrentUser(sessionData)
-        }else{
-          navigate("/login")
-        }
-
-      }
+        checkSession();
     },[currentUser]);
     return (
         <div className="body-content">
           <NotifyProvider Children={<Routes>
-                    <Route path="/bunch" element={
+                    <Route path={ROUTES.URL.HOMEPAGE} element={
                       <HomePage />
                     }/>
-                    <Route path='/my_profile' element={
+                    <Route path={ROUTES.URL.PROFILE} element={
                       <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} userSessionManager={userSessionManager}/>
                     }/>
-                    <Route path='/login' element={
+                    <Route path={ROUTES.URL.LOGIN} element={
                       <Login userSessionManager={userSessionManager} currentUser={currentUser} setCurrentUser={setCurrentUser}  page_options={page_options}/>
                     }/>
-                    <Route path="/bunchApp/*" element={
+                    <Route path={ROUTES.URL.BUNCH_APP + "/*"} element={
                       <BunchApp  childern={
                       <Routes>
-                        <Route path="/budget" element={<Budget/>} />
+                        <Route path={ROUTES.URL.BUDGETS} element={<Budgets currentUser={currentUser}/>} />
+                        <Route path={ROUTES.URL.BUDGET_DETAILS} element={<BudgetDetails />} />
+                        <Route path={ROUTES.URL.SPRINTS} element={<Sprints currentUser={currentUser} />} />
+                        <Route path={ROUTES.URL.SPRINT_DETAILS} element={<SprintDetails currentUser={currentUser} />} />
+                        <Route path={ROUTES.URL.TASK_DETAILS} element={<TaskDetails currentUser={currentUser}/>} />
                         <Route path="/*" element={null} />
                       </Routes>
                       }/>

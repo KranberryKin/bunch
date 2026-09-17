@@ -1,0 +1,147 @@
+import { useState } from "react";
+import "./currentsprintform.css"
+import { useNotify } from "../../../contextProvider/notifyContext.tsx";
+import LocalStorageManager from "../../../services/LocalStorageManager.ts";
+import ICurrentSprint from "../../../constants/interfaces/ICurrentSprint";
+import { DataBase_Strings } from "../../../constants/initial-states/Database.ts";
+import ISprintz from "../../../constants/interfaces/Sprintz";
+import CustomDatePicker from "../../customdatepicker/CustomDatePicker.tsx";
+import Button from "../../button/button.tsx";
+
+
+interface ISprintForm{
+  name:string;
+  startDate: string;
+  endDate:string;
+}
+
+interface ICurrentSprintFormProps {
+  Sprintz: ISprintz | undefined;
+  callbackFunc?: (currentSprintName?: string) => any;
+  currentSprintToUpdate?: ICurrentSprint;
+}
+
+
+const CurrentSprintForm = (props: ICurrentSprintFormProps) => {
+
+  const currentSprintRepo = new LocalStorageManager<ICurrentSprint>(DataBase_Strings.Current_Sprints_DB);
+  const [currentSprintForm, setCurrentSprintForm] = useState<ISprintForm>({
+    name: props.currentSprintToUpdate ? props.currentSprintToUpdate.name : "",
+    startDate:  props.currentSprintToUpdate ? new Date(props.currentSprintToUpdate.startDate).toISOString().split('T')[0] : "",
+    endDate:  props.currentSprintToUpdate ? new Date(props.currentSprintToUpdate.endDate).toISOString().split('T')[0] : ""
+  });
+  const formDetails = Object.keys(currentSprintForm);
+  const { sendNotify } = useNotify();
+
+  const validateForm = (isUpdate:boolean = false) => {
+    let isValid = true;
+
+    if(currentSprintForm.name.length < 3 || currentSprintForm.name === "") {
+      sendNotify("Sprint name must be at least 3 characters long.");
+      isValid = false;
+    }
+
+    if(currentSprintForm.startDate === "") {
+      sendNotify("Start date is required. If date is present, please re-submit date-picker.");
+      isValid = false;
+    }
+
+    if(currentSprintForm.endDate === "") {
+      sendNotify("End date is required. If date is present, please re-submit date-picker.");
+      isValid = false;
+    }
+
+    if(currentSprintForm.startDate && currentSprintForm.endDate) {
+      const startDate = new Date(currentSprintForm.startDate);
+      const endDate = new Date(currentSprintForm.endDate);
+
+      if(startDate >= endDate) {
+        sendNotify("Start date must be before end date.");
+        isValid = false;
+      }
+    }
+
+    if(currentSprintForm.startDate && currentSprintForm.endDate) {
+      const startDate = new Date(currentSprintForm.startDate);
+      const endDate = new Date(currentSprintForm.endDate);
+      const dateDiff: number = Math.abs(endDate.getTime() - startDate.getTime());
+      const daysDiff: number = Math.ceil(dateDiff / (1000 * 60 * 60 * 24));
+
+      if(daysDiff !== 7 && daysDiff !== 14 && (daysDiff !== 30 && daysDiff !== 28 && daysDiff !== 31 && daysDiff !== 29)) {
+        sendNotify("Date ranges must be either 1 week, 2 weeks, or 1 month.");
+        isValid = false;
+      }
+    }
+
+    if(!isUpdate && currentSprintRepo.values.filter(s => s.name === currentSprintForm.name).length > 0) {
+      sendNotify("A sprint with this name already exists.");
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  const handleDatePicked = (formDetail: string, selectedDate: string) => {
+    const updatedForm = { ...currentSprintForm, [formDetail]: selectedDate };
+    setCurrentSprintForm(updatedForm);
+  };
+
+  const handleFormButtonClicked = (whichButton: "Submit" | "Clear") => {
+    if(whichButton === "Submit"){
+      if(validateForm(props.currentSprintToUpdate !== undefined)){
+        if(props.Sprintz){
+          const newCurrentSprint:ICurrentSprint = {
+            id: props.currentSprintToUpdate ? props.currentSprintToUpdate.id : currentSprintRepo.generateId(),
+            sprintzId: props.Sprintz.id,
+            name: currentSprintForm.name,
+            startDate: new Date(currentSprintForm.startDate).toISOString().split('T')[0],
+            endDate: new Date(currentSprintForm.endDate).toISOString().split('T')[0],
+          }
+          if(props.currentSprintToUpdate?.id){
+            currentSprintRepo.updateData(newCurrentSprint)
+          }else{
+            currentSprintRepo.add(newCurrentSprint);
+          }
+          if(props.callbackFunc) {
+            if(props.currentSprintToUpdate){
+              props.callbackFunc(newCurrentSprint.name);
+            }else{
+              props.callbackFunc();
+            }
+          }
+        }
+      }
+    }else{
+      setCurrentSprintForm({
+        name: "",
+        startDate: "",
+        endDate: ""
+      })
+      if(props.callbackFunc){
+        props.callbackFunc();
+      }
+    }
+  }
+
+
+  return <div className="current-sprint-form-main-container">
+    <div className="current-sprint-form-title">
+      {"Current Sprint Form"}
+    </div>
+    <div className="current-sprint-form-body">
+      {formDetails.map((formDetails, index) => (
+        <div key={formDetails + index}>
+          {formDetails.includes("Date") ?
+            <div> {formDetails + " : "} {props.currentSprintToUpdate ? <CustomDatePicker dateToUpdate={new Date(props.currentSprintToUpdate[formDetails as keyof ICurrentSprint]).toISOString().split('T')[0]} callbackFunction={(selectedDate) => handleDatePicked(formDetails, selectedDate)}/> : <CustomDatePicker callbackFunction={(selectedDate) => handleDatePicked(formDetails, selectedDate)}/>}</div> 
+            : <div>{formDetails + " : "}<input type="text" value={currentSprintForm[formDetails as keyof ISprintForm]} onChange={(e) => setCurrentSprintForm({ ...currentSprintForm, [formDetails]: e.target.value })} /></div>}
+        </div>
+      ))}
+      <div className="current-sprint-form-buttons">
+        <Button buttonLabel="Submit" clicked={() => handleFormButtonClicked("Submit")} />
+        <Button buttonLabel="Clear" clicked={() => handleFormButtonClicked("Clear")} />
+      </div>
+    </div>
+  </div>
+}
+
+export default CurrentSprintForm;

@@ -1,3 +1,6 @@
+import { Route } from "react-router-dom";
+import { ROUTES } from "./routes.ts";
+
 interface IPageNames {
     name:string;
     page:string;
@@ -11,7 +14,11 @@ export const NAVBAR_CONSTANTS:INAVBAR_CONSTANTS = {
     page_names: [
         {
             name: "Budget",
-            page: "/bunchApp/budget",
+            page: ROUTES.URL.BUDGETS,
+        },
+        {
+            name: "Sprintz",
+            page: ROUTES.URL.SPRINTS,
         }
     ]
 }

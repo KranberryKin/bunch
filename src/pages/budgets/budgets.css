@@ -11,6 +11,18 @@
     padding: 0 15px 0 15px; 
 }
 
+.budget-option{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px 10px 15px;
+    border-bottom: 1px solid black;
+}
+.budget-option-label{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
 .budget-table{
     display: flex;
     flex-direction: column;

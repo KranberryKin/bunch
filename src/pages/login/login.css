@@ -6,6 +6,10 @@
     text-align: center;
     align-content: center;
 }
+.form-child-container{
+    display: flex;
+    flex-direction: column;
+}
 .login-title{
     display: block;
     padding-top: 10px;

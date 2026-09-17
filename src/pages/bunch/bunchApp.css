@@ -1,13 +1,14 @@
 .bunchApp-container{
     display: flex;
+    justify-content: center;
 }
 
 .bunchApp-page-container{
     display: flex;
     flex-direction: column;
-    width: 90vw;
-    margin-left: 2.5vw;
-    margin-right: 2.5vw;
+    width: 100%;
+    overflow-y: scroll;
+    height: 80vh;
 }
 
 .bunchApp-navbar-container{

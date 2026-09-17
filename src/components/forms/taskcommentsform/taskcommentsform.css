@@ -1,0 +1,10 @@
+.comments-form-main-container{
+  display: flex;
+  flex-direction: column;
+}
+.comment-form-footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+}

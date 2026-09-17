@@ -5,18 +5,20 @@ import React, { useEffect, useState } from "react";
 import IUser from "../../constants/interfaces/user";
 import IUserThemePref from "../../constants/interfaces/userThemePref";
 import LocalStorageManager from "../../services/LocalStorageManager.ts";
+import SessionDataManager from "../../services/SessionDataManager.ts";
+import { DataBase_Strings } from "../../constants/initial-states/Database.ts";
 
-const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:{currentUser: IUser | undefined,userSessionManager: SessionDataManager<IUser>, page_options: IPageContent[], setCurrentUser: (user:IUser| undefined) => void}) => {
+const Header = ({currentUser, page_options}:{currentUser: IUser | undefined, page_options: IPageContent[]}) => {
     const title = "Bunch";
     const navigate = useNavigate();
-    const userPrefLocal = "userPref";
     const themes: string[] = ["light", "dark"]
-    const userThemeStorageManager = new LocalStorageManager<IUserThemePref>(userPrefLocal);
+    const userThemeStorageManager = new LocalStorageManager<IUserThemePref>(DataBase_Strings.UserPref_DB);
     const setPage = (url: string) => {
         navigate(url);
     }
     const [userTheme, setUserTheme] = useState<IUserThemePref | undefined>(undefined)
     const [theme, setTheme] = useState(userTheme ? userTheme.theme : themes[0]);
+    const [isOptionsInvisible, setisOptionsInvisible] = useState(true);
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme)
@@ -78,6 +80,10 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
         assignUserTheme();
     }
 
+    const handleOptionsDropDown = () => {
+        setisOptionsInvisible(!isOptionsInvisible);
+    }
+
     return (
         <div className="header-container">
             <div>
@@ -101,8 +107,23 @@ const Header = ({currentUser, userSessionManager, page_options, setCurrentUser}:
                     </p>
                     )
                 })}
-                <div title="Toggle Light/Dark Themes" className="options-icon-container" onClick={changeThemes}>
-                ⚙️
+                <div>
+                    <div title="Toggle Light/Dark Themes" className="options-icon-container" onClick={handleOptionsDropDown}>
+                        ⚙️
+                    </div>
+                    <div hidden={isOptionsInvisible} className="editable-options-container">
+                        <div>
+                            <div>
+                                {"Theme"}
+                            </div>
+                            <div className="theme-changing-container">
+                                <div className={`slider ${theme === themes[0] ? 'dark' : 'light'}`} onClick={changeThemes} />
+                                <div>
+                                    {theme === themes[0] ? 'Light' : 'Dark'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

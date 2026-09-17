@@ -16,7 +16,7 @@ class LocalStorageManager<T extends {id:number}> {
             obj.id = this.generateId();
             this.values.push(obj);
             this.saveState();
-            this.get()
+            this.get();
         } catch (error) {
           console.error(`Error adding item in localStorage with key "${this._key}":`, error);
         }
@@ -66,6 +66,7 @@ class LocalStorageManager<T extends {id:number}> {
                     this.values.splice(removeObjIndex, 1);
                     this.values.push(objToUpdate);
                     this.saveState();
+                    this.get();
                 }else {
                 throw new Error(`Can't find Obj w/ id "${obj.id}" `)
                 }
@@ -83,7 +84,8 @@ class LocalStorageManager<T extends {id:number}> {
             const delObjIndex = this.values.findIndex(valObj => valObj.id === obj.id);
             if(delObjIndex > -1){
                 this.values = this.values.filter(valObj => valObj.id !== obj.id);
-                this.saveState()
+                this.saveState();
+                this.get();
             }else {
                 throw new Error(`Can't find Obj w/ Id "${obj.id}"`)
             }

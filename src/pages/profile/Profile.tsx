@@ -6,6 +6,7 @@ import Button from '../../components/button/button.tsx';
 import LocalStorageManager from '../../services/LocalStorageManager.ts';
 import SessionDataManager from '../../services/SessionDataManager.ts';
 import { DataBase_Strings } from '../../constants/initial-states/Database.ts';
+import { ROUTES } from '../../constants/initial-states/routes.ts';
 
 interface IEditUserForm {
     profile_picture: string;
@@ -27,7 +28,7 @@ const Profile = ({currentUser, setCurrentUser, userSessionManager}:{currentUser:
 
     useEffect(() => {
         if(currentUser === undefined){
-            navigate("/login");
+            navigate(ROUTES.URL.LOGIN);
         }
     },[currentUser]);
 
